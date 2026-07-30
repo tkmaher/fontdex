@@ -1,56 +1,78 @@
 """
 Categorize a list of domains into a fixed, custom taxonomy (<=20 categories)
-using a domain categorization API (default: Webshrinker-style auth).
+using the DomScan bulk categorization API.
 
 Usage:
     1. pip install requests
-    2. Set WEBSHRINKER_ACCESS_KEY / WEBSHRINKER_SECRET_KEY env vars (or hardcode below)
+    2. Set DOMSCAN_API_KEY env var (or hardcode below)
     3. Put your domain list in cl_top20000.csv (one column: "domain")
     4. python categorize_domains.py
 
-Output: categorized_domains.csv (domain, raw_category, mapped_category, confidence)
+Output: categorized_domains.csv (domain, primary_category, primary_category_id,
+         primary_category_confidence, adult_content, title, language, cached)
 Resumable: already-processed domains are skipped on re-run.
 """
 
 import csv
 import os
 import time
-import base64
 import requests
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 INPUT_FILE = "cl_top20000.csv"
 OUTPUT_FILE = "categorized_domains.csv"
-MAX_WORKERS = 5          
+BATCH_SIZE = 100
 RETRY_LIMIT = 3
 RETRY_BACKOFF_SEC = 2
 
-ACCESS_KEY = os.environ.get("WEBSHRINKER_ACCESS_KEY", "YOUR_ACCESS_KEY")
-SECRET_KEY = os.environ.get("WEBSHRINKER_SECRET_KEY", "YOUR_SECRET_KEY")
+API_KEY = os.environ.get("DOMSCAN_API_KEY", "YOUR_API_KEY")
+API_URL = "https://domscan.net/v1/categorize/bulk"
 
 
-def fetch_category(domain: str):
-    """Call the categorization API for a single domain. Returns (raw_category, confidence)."""
-    url = f"https://api.webshrinker.com/categories/v3/{base64.b64encode(domain.encode()).decode()}"
-    params = {"taxonomy": "webshrinker"}  # or "iab" for the detailed taxonomy
+def map_to_custom_category(raw_category: str) -> str:
+    """TODO: map DomScan's category taxonomy onto your own custom taxonomy (<=20 categories)."""
+    return raw_category
+
+
+def fetch_category_batch(domains: list[str]):
+    """
+    Call the DomScan bulk categorization API for a batch of domains (<=100).
+    Returns a dict mapping domain -> result dict from the API response
+    (or an error placeholder if the domain wasn't returned / the call failed).
+    """
+    headers = {
+        "Content-Type": "application/json",
+        "X-API-Key": API_KEY,
+    }
+    payload = {"urls": domains}
 
     for attempt in range(RETRY_LIMIT):
         try:
-            resp = requests.get(url, params=params, auth=(ACCESS_KEY, SECRET_KEY), timeout=10)
+            resp = requests.post(API_URL, headers=headers, json=payload, timeout=30)
             if resp.status_code == 200:
                 data = resp.json()
-                cats = data.get("data", [{}])[0].get("categories", [])
-                if cats:
-                    top = cats[0]
-                    return top.get("name", "Unknown"), top.get("confidence", 0)
-                return "Unknown", 0
+                results = data.get("results", [])
+                by_domain = {}
+                for r in results:
+                    # API may echo back full URLs (e.g. "https://example.com"); normalize to bare domain
+                    returned_url = r.get("url", "")
+                    key = returned_url.replace("https://", "").replace("http://", "").rstrip("/")
+                    by_domain[key] = r
+
+                out = {}
+                for d in domains:
+                    if d in by_domain:
+                        out[d] = by_domain[d]
+                    else:
+                        out[d] = {"error": "missing_from_response"}
+                return out
             elif resp.status_code == 429:
                 time.sleep(RETRY_BACKOFF_SEC * (attempt + 1))
             else:
-                return f"Error_{resp.status_code}", 0
+                return {d: {"error": f"Error_{resp.status_code}"} for d in domains}
         except requests.RequestException:
             time.sleep(RETRY_BACKOFF_SEC * (attempt + 1))
-    return "Error_timeout", 0
+
+    return {d: {"error": "Error_timeout"} for d in domains}
 
 
 def load_already_done():
@@ -58,6 +80,11 @@ def load_already_done():
         return set()
     with open(OUTPUT_FILE, newline="") as f:
         return {row["domain"] for row in csv.DictReader(f)}
+
+
+def chunked(seq, size):
+    for i in range(0, len(seq), size):
+        yield seq[i:i + size]
 
 
 def main():
@@ -72,18 +99,41 @@ def main():
     with open(OUTPUT_FILE, "a", newline="") as out_f:
         writer = csv.writer(out_f)
         if not file_exists:
-            writer.writerow(["domain", "raw_category", "mapped_category", "confidence"])
+            writer.writerow([
+                "domain",
+                "primary_category",
+                "primary_category_id",
+                "mapped_category",
+                "primary_category_confidence",
+                "adult_content",
+                "title",
+                "language",
+                "cached",
+            ])
 
-        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
-            futures = {pool.submit(fetch_category, d): d for d in todo}
-            for i, fut in enumerate(as_completed(futures), 1):
-                domain = futures[fut]
-                raw_cat, confidence = fut.result()
-                mapped = map_to_custom_category(raw_cat)
-                writer.writerow([domain, raw_cat, mapped, confidence])
-                out_f.flush()
-                if i % 100 == 0:
-                    print(f"Processed {i}/{len(todo)}")
+        processed = 0
+        for batch in chunked(todo, BATCH_SIZE):
+            results = fetch_category_batch(batch)
+            for domain in batch:
+                r = results.get(domain, {"error": "unknown"})
+                if "error" in r:
+                    writer.writerow([domain, r["error"], "", "", "", "", "", "", ""])
+                else:
+                    raw_cat = r.get("primary_category", "Unknown")
+                    writer.writerow([
+                        domain,
+                        raw_cat,
+                        r.get("primary_category_id", ""),
+                        map_to_custom_category(raw_cat),
+                        r.get("primary_category_confidence", ""),
+                        r.get("adult_content", ""),
+                        r.get("title", ""),
+                        r.get("language", ""),
+                        r.get("cached", ""),
+                    ])
+            out_f.flush()
+            processed += len(batch)
+            print(f"Processed {processed}/{len(todo)}")
 
     print("Done.")
 
