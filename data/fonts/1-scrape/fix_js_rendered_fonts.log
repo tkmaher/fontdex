@@ -1,0 +1,234 @@
+2026-08-15 16:21:25,025 INFO 573 rows still blank; retrying with a headless browser
+2026-08-15 16:21:37,745 INFO Fixed tiktok.com -> TikTokSans | TikTokFont | tiktok-text-medium
+2026-08-15 16:22:04,843 INFO Fixed nginx.com -> proxima-nova | Roboto Mono | proximaNova
+2026-08-15 16:22:05,001 INFO Still failing for adobe.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://adobe.com/
+Call log:
+  - navigating to "https://adobe.com/", waiting until "networkidle"
+
+2026-08-15 16:22:05,666 INFO Still failing for europa.eu: Page.goto: Navigation to "https://europa.eu/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://europa.eu/", waiting until "networkidle"
+
+2026-08-15 16:22:06,232 INFO Still failing for blogspot.com: Page.goto: Navigation to "https://blogspot.com/" is interrupted by another navigation to "https://european-union.europa.eu/select-language?destination=/node/1"
+Call log:
+  - navigating to "https://blogspot.com/", waiting until "networkidle"
+
+2026-08-15 16:22:06,356 INFO Still failing for github.io: Page.goto: Navigation to "https://github.io/" is interrupted by another navigation to "https://www.blogger.com/about/?bpli=1"
+Call log:
+  - navigating to "https://github.io/", waiting until "networkidle"
+
+2026-08-15 16:22:06,499 INFO Still failing for reddit.com: Page.goto: Navigation to "https://reddit.com/" is interrupted by another navigation to "https://pages.github.com/"
+Call log:
+  - navigating to "https://reddit.com/", waiting until "networkidle"
+
+2026-08-15 16:22:06,738 INFO Still failing for itunes.apple.com: Page.goto: Navigation to "https://itunes.apple.com/" is interrupted by another navigation to "https://www.reddit.com/"
+Call log:
+  - navigating to "https://itunes.apple.com/", waiting until "networkidle"
+
+2026-08-15 16:22:06,994 INFO Still failing for godaddy.com: Page.goto: Navigation to "https://godaddy.com/" is interrupted by another navigation to "https://www.apple.com/itunes/"
+Call log:
+  - navigating to "https://godaddy.com/", waiting until "networkidle"
+
+2026-08-15 16:22:07,278 INFO Still failing for live.com: Page.goto: Navigation to "https://live.com/" is interrupted by another navigation to "https://www.godaddy.com/"
+Call log:
+  - navigating to "https://live.com/", waiting until "networkidle"
+
+2026-08-15 16:22:07,444 INFO Still failing for shopify.com: Page.goto: Navigation to "https://shopify.com/" is interrupted by another navigation to "https://outlook.live.com/mail/"
+Call log:
+  - navigating to "https://shopify.com/", waiting until "networkidle"
+
+2026-08-15 16:22:07,714 INFO Still failing for dropbox.com: Page.goto: Navigation to "https://dropbox.com/" is interrupted by another navigation to "https://www.shopify.com/"
+Call log:
+  - navigating to "https://dropbox.com/", waiting until "networkidle"
+
+2026-08-15 16:22:08,671 INFO Still failing for vk.com: Page.goto: Navigation to "https://vk.com/" is interrupted by another navigation to "https://www.dropbox.com/"
+Call log:
+  - navigating to "https://vk.com/", waiting until "networkidle"
+
+2026-08-15 16:22:58,680 INFO Still failing for weibo.com: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://weibo.com/", waiting until "load"
+
+2026-08-15 16:23:14,820 INFO Fixed outlook.com -> MWF-FLUENT-ICONS | Segoe UI | Segoe UI Web (East European)
+2026-08-15 16:23:20,035 INFO Fixed telegram.me -> Menlo | HelveticaNeue-Light | monospace
+2026-08-15 16:23:45,267 INFO Fixed msn.com -> Times |  | 
+2026-08-15 16:23:45,401 INFO Still failing for get.adobe.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://get.adobe.com/
+Call log:
+  - navigating to "https://get.adobe.com/", waiting until "networkidle"
+
+2026-08-15 16:23:45,492 INFO Still failing for outlook.live.com: Page.goto: Navigation to "https://outlook.live.com/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://outlook.live.com/", waiting until "networkidle"
+
+2026-08-15 16:23:45,610 INFO Still failing for outlook.office.com: Page.goto: Navigation to "https://outlook.office.com/" is interrupted by another navigation to "https://outlook.live.com/mail/"
+Call log:
+  - navigating to "https://outlook.office.com/", waiting until "networkidle"
+
+2026-08-15 16:23:46,092 INFO Still failing for blogger.com: Page.goto: Navigation to "https://blogger.com/" is interrupted by another navigation to "https://outlook.office.com/mail/"
+Call log:
+  - navigating to "https://blogger.com/", waiting until "networkidle"
+
+2026-08-15 16:23:46,581 INFO Still failing for amazon.co.uk: Page.goto: Navigation to "https://amazon.co.uk/" is interrupted by another navigation to "https://www.blogger.com/about/?bpli=1"
+Call log:
+  - navigating to "https://amazon.co.uk/", waiting until "networkidle"
+
+2026-08-15 16:23:49,360 INFO Still failing for yandex.ru: Page.goto: Navigation to "https://yandex.ru/" is interrupted by another navigation to "https://www.amazon.co.uk/"
+Call log:
+  - navigating to "https://yandex.ru/", waiting until "networkidle"
+
+2026-08-15 16:23:49,742 INFO Still failing for apa.org: Page.goto: Navigation to "https://apa.org/" is interrupted by another navigation to "https://sso.passport.yandex.ru/push?uuid=e8fbe792-9dcc-498e-b49e-8f9493cf6bc4&retpath=https%3A%2F%2Fdzen.ru%2F%3Fyredirect%3Dtrue%26is_autologin_ya%3Dtrue"
+Call log:
+  - navigating to "https://apa.org/", waiting until "networkidle"
+
+2026-08-15 16:23:49,977 INFO Still failing for arcgis.com: Page.goto: Navigation to "https://arcgis.com/" is interrupted by another navigation to "https://www.apa.org/"
+Call log:
+  - navigating to "https://arcgis.com/", waiting until "networkidle"
+
+2026-08-15 16:23:50,093 INFO Still failing for theconversation.com: Page.goto: Navigation to "https://theconversation.com/" is interrupted by another navigation to "https://www.arcgis.com/index.html"
+Call log:
+  - navigating to "https://theconversation.com/", waiting until "networkidle"
+
+2026-08-15 16:23:51,164 INFO Still failing for change.org: Page.goto: Navigation to "https://change.org/" is interrupted by another navigation to "https://theconversation.com/us"
+Call log:
+  - navigating to "https://change.org/", waiting until "networkidle"
+
+2026-08-15 16:23:51,558 INFO Still failing for sun.com: Page.goto: Navigation to "https://sun.com/" is interrupted by another navigation to "https://www.change.org/"
+Call log:
+  - navigating to "https://sun.com/", waiting until "networkidle"
+
+2026-08-15 16:23:51,799 INFO Still failing for eepurl.com: Page.goto: Navigation to "https://eepurl.com/" is interrupted by another navigation to "https://www.oracle.com/it-infrastructure/"
+Call log:
+  - navigating to "https://eepurl.com/", waiting until "networkidle"
+
+2026-08-15 16:23:52,152 INFO Still failing for vercel.app: Page.goto: Navigation to "https://vercel.app/" is interrupted by another navigation to "https://mailchimp.com/"
+Call log:
+  - navigating to "https://vercel.app/", waiting until "networkidle"
+
+2026-08-15 16:23:56,017 INFO Fixed upload.wikimedia.org -> sans-serif | Linux Libertine | monospace
+2026-08-15 16:24:01,979 INFO Fixed bund.de -> Times |  | 
+2026-08-15 16:24:37,903 INFO Fixed acs.org -> Helvetica |  | 
+2026-08-15 16:24:38,785 INFO Fixed bls.gov -> Times |  | 
+2026-08-15 16:25:05,695 INFO Fixed engadget.com -> guardian-sans-regular | Arial | guardian-sans-bold
+2026-08-15 16:25:05,718 INFO Progress saved (10 updated so far)
+2026-08-15 16:25:09,312 INFO Fixed my.matterport.com -> Roboto | IBMPlexSans-Bold | Google Sans
+2026-08-15 16:25:12,646 INFO Fixed disqus.com -> Source Sans Pro | slick | Helvetica
+2026-08-15 16:25:39,205 INFO Fixed clevelandclinic.org -> __Roboto_a857ad | __Source_Sans_3_8bd802 | __News_Cycle_da479a
+2026-08-15 16:25:42,230 INFO Fixed service.gov.uk -> GDS Transport | sans-serif | HelveticaNeue
+2026-08-15 16:25:44,667 INFO Fixed senate.gov -> Source Sans Pro | FontAwesome | monospace
+2026-08-15 16:26:10,019 INFO Fixed photobucket.com -> Times |  | 
+2026-08-15 16:26:15,046 INFO Fixed notion.site -> NotionInter | Google Sans | Roboto-Regular
+2026-08-15 16:26:44,239 INFO Fixed hatena.ne.jp -> -apple-system |  | 
+2026-08-15 16:27:36,157 INFO Fixed douyin.com -> PingFang SC | -apple-system | DFP King Gothic GB Medium
+2026-08-15 16:28:26,168 INFO Still failing for mail.ru: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://mail.ru/", waiting until "load"
+
+2026-08-15 16:29:00,213 INFO Fixed ey.com -> VideoJS | Material Icons | georgia
+2026-08-15 16:29:00,233 INFO Progress saved (20 updated so far)
+2026-08-15 16:29:27,293 INFO Fixed axios.com -> Inter | slick | 
+2026-08-15 16:29:37,431 INFO Fixed msu.edu -> Metropolis | Font Awesome 6 Free | system-ui
+2026-08-15 16:29:43,536 INFO Fixed nikkei.com -> monospace | -apple-system | Hiragino Kaku Gothic ProN
+2026-08-15 16:29:47,522 INFO Fixed altervista.org -> altervista-fonts | ArialMT | Arial-BoldMT
+2026-08-15 16:29:53,249 INFO Fixed webs.com -> Graphik | Times | 
+2026-08-15 16:29:55,953 INFO Fixed laracasts.com -> Hanken Grotesk |  | 
+2026-08-15 16:29:57,653 INFO Fixed haxx.se -> sans-serif | verdana | 
+2026-08-15 16:30:16,097 INFO Fixed treasury.gov -> Source Sans Pro Web | Merriweather Web | Source Sans Pro
+2026-08-15 16:30:23,800 INFO Fixed accor.com -> montserrat | redHatDisplay | monospace
+2026-08-15 16:30:27,179 INFO Fixed gotowebinar.com -> slick |  | 
+2026-08-15 16:30:27,195 INFO Progress saved (30 updated so far)
+2026-08-15 16:30:33,106 INFO Fixed online.fliphtml5.com -> Inter | Open Sans | helvetica
+2026-08-15 16:30:38,931 INFO Fixed 1688.com -> nc_iconfont |  | 
+2026-08-15 16:31:28,963 INFO Still failing for vkontakte.ru: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://vkontakte.ru/", waiting until "load"
+
+2026-08-15 16:31:30,358 INFO Still failing for ea.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://ea.com/
+Call log:
+  - navigating to "https://ea.com/", waiting until "networkidle"
+
+2026-08-15 16:31:30,920 INFO Still failing for vk.ru: Page.goto: Navigation to "https://vk.ru/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://vk.ru/", waiting until "networkidle"
+
+2026-08-15 16:31:44,880 INFO Fixed douban.com -> Helvetica | Arial | 
+2026-08-15 16:32:13,000 INFO Fixed toutiao.com -> monospace | PingFang SC | ByteNumber-center
+2026-08-15 16:32:17,672 INFO Fixed indiana.edu -> Roboto Flex |  | 
+2026-08-15 16:32:46,532 INFO Fixed lonelyplanet.com -> ABC Monument Grotesk | ABC Arizona Flare | American Grotesk Compressed
+2026-08-15 16:33:11,610 INFO Fixed bell-labs.com -> Times |  | 
+2026-08-15 16:33:26,121 INFO Fixed mega.nz -> Inter |  | 
+2026-08-15 16:33:41,983 INFO Fixed unfccc.int -> Merriweather Sans Regular | Lora Regular | Merriweather Sans Light
+2026-08-15 16:33:42,928 INFO Fixed zlib.net -> Times |  | 
+2026-08-15 16:33:42,956 INFO Progress saved (40 updated so far)
+2026-08-15 16:33:44,471 INFO Fixed site.com -> Times |  | 
+2026-08-15 16:34:20,451 INFO Fixed symantec.com -> Inter | bi2 | brcm
+2026-08-15 16:34:21,477 INFO Fixed libpng.org -> Times |  | 
+2026-08-15 16:34:23,101 INFO Fixed gohugo.io -> Mulish |  | 
+2026-08-15 16:34:24,184 INFO Fixed msdn.com -> Arial |  | 
+2026-08-15 16:34:25,091 INFO Fixed openldap.org -> Arial | Times | 
+2026-08-15 16:34:39,295 INFO Fixed amazon.es -> Arial | Amazon Ember Regular | Amazon Ember
+2026-08-15 16:35:07,862 INFO Fixed cbslocal.com -> Proxima Nova | Publico Headline | Publico Text
+2026-08-15 16:35:32,922 INFO Fixed gzip.org -> Times |  | 
+2026-08-15 16:36:00,457 INFO Fixed philips.com -> neue-frutiger-world-w02 |  | 
+2026-08-15 16:36:00,478 INFO Progress saved (50 updated so far)
+2026-08-15 16:36:04,975 INFO Fixed virustotal.com -> Source Sans Pro | Source Code Pro | Material Icons
+2026-08-15 16:36:08,251 INFO Fixed fastpanel.direct -> Onest |  | 
+2026-08-15 16:36:14,147 INFO Fixed mac.com -> SF Pro HK | SF Pro AR | SF Pro JP
+2026-08-15 16:36:15,400 INFO Fixed chromium.org -> Arial | monospace | 
+2026-08-15 16:36:18,626 INFO Fixed awin1.com -> Inter |  | 
+2026-08-15 16:36:22,785 INFO Fixed biglobe.ne.jp -> M PLUS 1 |  | 
+2026-08-15 16:36:29,385 INFO Fixed unicode.org -> awb-icons | Source Sans Pro | Source Sans 3
+2026-08-15 16:36:30,488 INFO Fixed ijg.org -> Times |  | 
+2026-08-15 16:37:03,989 INFO Fixed amazon.it -> Amazon Ember | VideoJS | Arial
+2026-08-15 16:37:31,544 INFO Fixed dyndns.org -> -apple-system | Lucida Grande | Monospace
+2026-08-15 16:37:31,579 INFO Progress saved (60 updated so far)
+2026-08-15 16:37:37,186 INFO Fixed apache-ssl.org -> -apple-system | Noto Mono | Google Sans
+2026-08-15 16:37:38,763 INFO Fixed nd.edu -> GP | Garamond-Pro | 
+2026-08-15 16:38:12,535 INFO Fixed kakao.com -> KakaoBig | KakaoSmall | KakaoDigitLatin
+2026-08-15 16:38:15,089 INFO Fixed draft.blogger.com -> Roboto | sans-serif | monospace
+2026-08-15 16:38:24,225 INFO Fixed apple.co -> SF Pro HK | SF Pro AR | SF Pro JP
+2026-08-15 16:38:32,325 INFO Fixed dartmouth.edu -> Dartmouth Ruzika | National\ 2 | National2Web
+2026-08-15 16:38:59,302 INFO Fixed cointelegraph.com -> Open Sans |  | 
+2026-08-15 16:39:00,537 INFO Fixed opaque.net -> Times |  | 
+2026-08-15 16:39:04,107 INFO Fixed myportfolio.com -> adobe-clean | adobe-clean-han-japanese | adobe-clean-han-korean
+2026-08-15 16:39:21,783 INFO Fixed in.gov -> Public Sans | Mulish | Readex Pro
+2026-08-15 16:39:21,906 INFO Progress saved (70 updated so far)
+2026-08-15 16:39:31,467 INFO Fixed ct.gov -> Poppins | Arial | Poppins Semibold
+2026-08-15 16:39:40,998 INFO Fixed hexun.com -> 微软雅黑 | ???? | Arial
+2026-08-15 16:40:10,383 INFO Fixed vistaprint.com -> Graphik | system-ui | 
+2026-08-15 16:40:14,297 INFO Fixed missouri.edu -> Open Sans | Manuka | 
+2026-08-15 16:40:21,289 INFO Fixed porsche.com -> Porsche Next | + 2.125ex) Porsche Next, Arial Narrow, Arial, Heiti SC, SimHei, sans-serif | 
+2026-08-15 16:40:30,579 INFO Fixed nus.edu.sg -> FontAwesome | system-ui | SFMono-Regular
+2026-08-15 16:40:49,958 INFO Fixed cnki.net -> Helvetica Neue | Simsun | Arial
+2026-08-15 16:40:55,911 INFO Fixed freewebs.com -> Graphik | Times | 
+2026-08-15 16:40:59,017 INFO Fixed tawk.to -> ui-monospace | Inter | Noto Sans Arabic
+2026-08-15 16:41:31,384 INFO Fixed aaa.com -> Mission Gothic | Mission Gothic Bold | Arial
+2026-08-15 16:41:31,403 INFO Progress saved (80 updated so far)
+2026-08-15 16:41:42,399 INFO Fixed ebscohost.com -> Font Awesome 5 Pro | Noto Sans | Open Sans
+2026-08-15 16:41:43,389 INFO Fixed comcast.net -> Times |  | 
+2026-08-15 16:41:55,683 INFO Fixed wdr.de -> Feather Icons | TheSansC5s | monospace
+2026-08-15 16:42:25,807 INFO Fixed chosun.com -> NotoSansKR-Bold | Noto Sans KR | NotoSansKR-Medium
+2026-08-15 16:42:29,705 INFO Fixed vaticannews.va -> Arial | Museo Sans Cyrl | Noto Sans Armenian
+2026-08-15 16:42:31,364 INFO Fixed sphinx-doc.org -> sans-serif | Consolas | system-ui
+2026-08-15 16:42:37,968 INFO Fixed scoop.it -> Open Sans | Geist Mono | -apple-system
+2026-08-15 16:42:42,043 INFO Fixed zblogcn.com -> iconfont | Helvetica Neue | Penrose
+2026-08-15 16:42:46,127 INFO Fixed ryanair.com -> Roboto |  | 
+2026-08-15 16:42:52,203 INFO Fixed technorati.com -> Roboto | cube-icons | Arial
+2026-08-15 16:42:52,224 INFO Progress saved (90 updated so far)
+2026-08-15 16:42:57,868 INFO Fixed workers.dev -> STK Bureau Sans | -apple-system | system-ui
+2026-08-15 16:43:03,988 INFO Fixed nap.edu -> monospace |  | 
+2026-08-15 16:43:06,963 INFO Fixed maine.gov -> RymanEco-Regular | arial | Google Sans
+2026-08-15 16:43:13,449 INFO Fixed oclc.org -> Graphik Web | Helvetica Neue | Helvetica
+2026-08-15 16:43:41,944 INFO Fixed lenta.ru -> Lato Lenta | Source Serif Pro Lenta | sans-serif
+2026-08-15 16:43:56,938 INFO Fixed nla.gov.au -> Open Sans | STIX Two Text | Arial
+2026-08-15 16:43:58,057 INFO Fixed wikimapia.org -> Times |  | 
+2026-08-15 16:44:04,551 INFO Fixed c212.net -> proxima-nova | proxima-nova-extra-condensed | Arial
+2026-08-15 16:44:05,540 INFO Fixed usaid.gov -> sans-serif |  | 
+2026-08-15 16:44:55,560 INFO Still failing for weibo.cn: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://weibo.cn/", waiting until "load"
+
+2026-08-15 16:44:58,016 INFO Fixed truthsocial.com -> Helvetica | monospace | 
+2026-08-15 16:44:58,035 INFO Progress saved (100 updated so far)
+2026-08-15 16:45:23,308 INFO Still failing for planalto.gov.br: Evaluate error: Page.evaluate: Execution context was destroyed, most likely because of a navigation
+2026-08-15 16:45:27,895 INFO Fixed nypl.org -> system-ui | monospace | Trebuchet MS
+2026-08-15 16:45:28,525 INFO Fixed api.leadconnectorhq.com -> Times |  | 
