@@ -25,6 +25,17 @@ run. That log file is the first place to check if the script appears to
 "stop" - it will show the domain and traceback for whatever actually
 happened.
 
+Transient failures (DNS resolver hiccups, brief connect timeouts, and
+502/503/504 responses) are retried a couple of times with backoff at the
+transport layer before being recorded as an error - on a long crawl a
+meaningful chunk of "errors" are really just the local network/resolver
+hiccuping under sustained load against otherwise perfectly reachable
+sites, and those should now resolve on retry rather than needing a
+second full run. Genuinely broken sites (bot-blocking WAFs returning
+403, sites with actually misconfigured/expired/self-signed certificates,
+truly dead domains) will still end up in the error CSV, since those
+aren't things a retry fixes.
+
 ---------------------------------------------------------------------------
 Heuristic for CSS custom-property ("CSS variable") fonts
 ---------------------------------------------------------------------------
@@ -76,10 +87,13 @@ import socket
 import traceback
 from urllib.parse import urljoin
 
+import certifi
 import cssutils
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 cssutils.log.setLevel(logging.CRITICAL)
 
@@ -99,9 +113,67 @@ CLASSIFIED_CSV = "classified.csv"
 OUTPUT_CSV = "fonts_scraped.csv"
 ERROR_CSV = "fonts_scraped_error.csv"
 
+# A realistic browser header set. The bare User-Agent-only header set from
+# the original script is itself a bot-detection signal for many WAFs
+# (Cloudflare/Akamai etc.) - a fuller, ordinary-browser-shaped header set
+# clears some of those checks, though JS-challenge-based WAFs can't be
+# beaten by plain `requests` regardless of headers.
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Accept": (
+        "text/html,application/xhtml+xml,application/xml;q=0.9,"
+        "image/avif,image/webp,*/*;q=0.8"
+    ),
+    "Accept-Language": "en-US,en;q=0.9",
 }
+
+# Transient network hiccups (DNS resolver hiccups, brief connect timeouts,
+# 502/503/504) are retried automatically at the transport layer before
+# being counted as a real error - see the DNS-resolution-failure note in
+# already_processed_domains/get_session below.
+RETRY_CONNECT = 2
+RETRY_READ = 1
+RETRY_BACKOFF = 1.5
+RETRY_STATUS_FORCELIST = (502, 503, 504)
+
+
+def get_session():
+    """A requests Session that retries transient connect/DNS/5xx failures.
+
+    Roughly a third of the errors seen on a 10k-domain crawl tend to be
+    NameResolutionError / ConnectTimeoutError hitting perfectly reachable,
+    legitimate domains - the local resolver or network hiccuping under
+    sustained request volume, not the site being down. Retrying those
+    (with backoff) at the transport layer turns most of them into
+    successes instead of permanent error rows.
+    """
+    session = requests.Session()
+    retry = Retry(
+        total=RETRY_CONNECT + RETRY_READ,
+        connect=RETRY_CONNECT,
+        read=RETRY_READ,
+        status_forcelist=RETRY_STATUS_FORCELIST,
+        backoff_factor=RETRY_BACKOFF,
+        raise_on_status=False,
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
+SESSION = get_session()
+
+# Use certifi's CA bundle explicitly rather than whatever the system/venv
+# happens to have. "unable to get local issuer certificate" errors against
+# otherwise-unrelated, legitimate sites are almost always a stale/missing
+# local CA bundle rather than a real problem with those sites - pinning to
+# certifi (and keeping the `certifi` package updated: `pip install -U
+# certifi`) clears most of those.
+VERIFY = certifi.where()
 
 # "inherit" doesn't name a font at all, so it's the one value dropped
 # outright. System-font keywords (sans-serif, monospace, system-ui, ...)
@@ -149,7 +221,7 @@ def get_all_styles(url):
     fetched/parsed at all.
     """
     try:
-        response = requests.get(url, headers=HEADERS, timeout=10)
+        response = SESSION.get(url, headers=HEADERS, timeout=10, verify=VERIFY)
         response.raise_for_status()
     except requests.RequestException as e:
         return [], str(e)
@@ -168,7 +240,9 @@ def get_all_styles(url):
                 continue
             css_url = urljoin(url, href)
             try:
-                css_response = requests.get(css_url, headers=HEADERS, timeout=5)
+                css_response = SESSION.get(
+                    css_url, headers=HEADERS, timeout=5, verify=VERIFY
+                )
                 if css_response.status_code == 200:
                     all_css_rules.append({"css_text": css_response.text})
             except requests.RequestException:
