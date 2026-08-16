@@ -56,7 +56,7 @@ import certifi
 import cssutils
 import pandas as pd
 import requests
-from playwright.sync_api import sync_playwright, TimeoutError as PWTimeoutError, Error
+from playwright.sync_api import sync_playwright, TimeoutError as PWTimeoutError
 
 cssutils.log.setLevel(logging.CRITICAL)
 
@@ -243,16 +243,11 @@ def get_rendered_styles(page, url):
     try:
         try:
             page.goto(url, timeout=PAGE_TIMEOUT_MS, wait_until="networkidle")
-        except Error as e:
-            if e == PWTimeoutError:
-                logger.info("Timeout loading %s; retrying", url)
-                page.goto(url, timeout=PAGE_TIMEOUT_MS, wait_until="load")
-            if "interrupted by another navigation" in str(e).lower():
-                logger.info("Navigation interrupted for %s; retrying", url)
-                # Let the secondary navigation complete
-                page.wait_for_load_state("load")
-            else:
-                raise e
+        except PWTimeoutError:
+            # networkidle never settles on some long-poll/websocket-heavy
+            # sites - fall back to the plain load event instead of
+            # failing the domain outright.
+            page.goto(url, timeout=PAGE_TIMEOUT_MS, wait_until="load")
     except Exception as e:
         return [], None, str(e)
 

@@ -1,234 +1,658 @@
-2026-08-15 16:21:25,025 INFO 573 rows still blank; retrying with a headless browser
-2026-08-15 16:21:37,745 INFO Fixed tiktok.com -> TikTokSans | TikTokFont | tiktok-text-medium
-2026-08-15 16:22:04,843 INFO Fixed nginx.com -> proxima-nova | Roboto Mono | proximaNova
-2026-08-15 16:22:05,001 INFO Still failing for adobe.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://adobe.com/
+2026-08-15 19:46:29,444 INFO 213 rows still blank; retrying with a headless browser
+2026-08-15 19:46:30,808 INFO Still failing for adobe.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://adobe.com/
 Call log:
   - navigating to "https://adobe.com/", waiting until "networkidle"
 
-2026-08-15 16:22:05,666 INFO Still failing for europa.eu: Page.goto: Navigation to "https://europa.eu/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+2026-08-15 19:46:31,387 INFO Navigation interrupted for https://europa.eu; retrying
+2026-08-15 19:46:31,415 INFO Still failing for europa.eu: Evaluate error: Page.evaluate: Execution context was destroyed, most likely because of a navigation
+2026-08-15 19:46:32,373 INFO Navigation interrupted for https://vk.com; retrying
+2026-08-15 19:46:47,723 INFO Fixed vk.com -> -apple-system | VK Sans Display | Lucida Sans
+2026-08-15 19:47:12,728 INFO Still failing for weibo.com: Page.goto: Timeout 25000ms exceeded.
 Call log:
-  - navigating to "https://europa.eu/", waiting until "networkidle"
+  - navigating to "https://weibo.com/", waiting until "networkidle"
 
-2026-08-15 16:22:06,232 INFO Still failing for blogspot.com: Page.goto: Navigation to "https://blogspot.com/" is interrupted by another navigation to "https://european-union.europa.eu/select-language?destination=/node/1"
-Call log:
-  - navigating to "https://blogspot.com/", waiting until "networkidle"
-
-2026-08-15 16:22:06,356 INFO Still failing for github.io: Page.goto: Navigation to "https://github.io/" is interrupted by another navigation to "https://www.blogger.com/about/?bpli=1"
-Call log:
-  - navigating to "https://github.io/", waiting until "networkidle"
-
-2026-08-15 16:22:06,499 INFO Still failing for reddit.com: Page.goto: Navigation to "https://reddit.com/" is interrupted by another navigation to "https://pages.github.com/"
-Call log:
-  - navigating to "https://reddit.com/", waiting until "networkidle"
-
-2026-08-15 16:22:06,738 INFO Still failing for itunes.apple.com: Page.goto: Navigation to "https://itunes.apple.com/" is interrupted by another navigation to "https://www.reddit.com/"
-Call log:
-  - navigating to "https://itunes.apple.com/", waiting until "networkidle"
-
-2026-08-15 16:22:06,994 INFO Still failing for godaddy.com: Page.goto: Navigation to "https://godaddy.com/" is interrupted by another navigation to "https://www.apple.com/itunes/"
-Call log:
-  - navigating to "https://godaddy.com/", waiting until "networkidle"
-
-2026-08-15 16:22:07,278 INFO Still failing for live.com: Page.goto: Navigation to "https://live.com/" is interrupted by another navigation to "https://www.godaddy.com/"
-Call log:
-  - navigating to "https://live.com/", waiting until "networkidle"
-
-2026-08-15 16:22:07,444 INFO Still failing for shopify.com: Page.goto: Navigation to "https://shopify.com/" is interrupted by another navigation to "https://outlook.live.com/mail/"
-Call log:
-  - navigating to "https://shopify.com/", waiting until "networkidle"
-
-2026-08-15 16:22:07,714 INFO Still failing for dropbox.com: Page.goto: Navigation to "https://dropbox.com/" is interrupted by another navigation to "https://www.shopify.com/"
-Call log:
-  - navigating to "https://dropbox.com/", waiting until "networkidle"
-
-2026-08-15 16:22:08,671 INFO Still failing for vk.com: Page.goto: Navigation to "https://vk.com/" is interrupted by another navigation to "https://www.dropbox.com/"
-Call log:
-  - navigating to "https://vk.com/", waiting until "networkidle"
-
-2026-08-15 16:22:58,680 INFO Still failing for weibo.com: Page.goto: Timeout 25000ms exceeded.
-Call log:
-  - navigating to "https://weibo.com/", waiting until "load"
-
-2026-08-15 16:23:14,820 INFO Fixed outlook.com -> MWF-FLUENT-ICONS | Segoe UI | Segoe UI Web (East European)
-2026-08-15 16:23:20,035 INFO Fixed telegram.me -> Menlo | HelveticaNeue-Light | monospace
-2026-08-15 16:23:45,267 INFO Fixed msn.com -> Times |  | 
-2026-08-15 16:23:45,401 INFO Still failing for get.adobe.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://get.adobe.com/
+2026-08-15 19:47:12,862 INFO Still failing for get.adobe.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://get.adobe.com/
 Call log:
   - navigating to "https://get.adobe.com/", waiting until "networkidle"
 
-2026-08-15 16:23:45,492 INFO Still failing for outlook.live.com: Page.goto: Navigation to "https://outlook.live.com/" is interrupted by another navigation to "chrome-error://chromewebdata/"
-Call log:
-  - navigating to "https://outlook.live.com/", waiting until "networkidle"
-
-2026-08-15 16:23:45,610 INFO Still failing for outlook.office.com: Page.goto: Navigation to "https://outlook.office.com/" is interrupted by another navigation to "https://outlook.live.com/mail/"
-Call log:
-  - navigating to "https://outlook.office.com/", waiting until "networkidle"
-
-2026-08-15 16:23:46,092 INFO Still failing for blogger.com: Page.goto: Navigation to "https://blogger.com/" is interrupted by another navigation to "https://outlook.office.com/mail/"
-Call log:
-  - navigating to "https://blogger.com/", waiting until "networkidle"
-
-2026-08-15 16:23:46,581 INFO Still failing for amazon.co.uk: Page.goto: Navigation to "https://amazon.co.uk/" is interrupted by another navigation to "https://www.blogger.com/about/?bpli=1"
-Call log:
-  - navigating to "https://amazon.co.uk/", waiting until "networkidle"
-
-2026-08-15 16:23:49,360 INFO Still failing for yandex.ru: Page.goto: Navigation to "https://yandex.ru/" is interrupted by another navigation to "https://www.amazon.co.uk/"
-Call log:
-  - navigating to "https://yandex.ru/", waiting until "networkidle"
-
-2026-08-15 16:23:49,742 INFO Still failing for apa.org: Page.goto: Navigation to "https://apa.org/" is interrupted by another navigation to "https://sso.passport.yandex.ru/push?uuid=e8fbe792-9dcc-498e-b49e-8f9493cf6bc4&retpath=https%3A%2F%2Fdzen.ru%2F%3Fyredirect%3Dtrue%26is_autologin_ya%3Dtrue"
-Call log:
-  - navigating to "https://apa.org/", waiting until "networkidle"
-
-2026-08-15 16:23:49,977 INFO Still failing for arcgis.com: Page.goto: Navigation to "https://arcgis.com/" is interrupted by another navigation to "https://www.apa.org/"
-Call log:
-  - navigating to "https://arcgis.com/", waiting until "networkidle"
-
-2026-08-15 16:23:50,093 INFO Still failing for theconversation.com: Page.goto: Navigation to "https://theconversation.com/" is interrupted by another navigation to "https://www.arcgis.com/index.html"
-Call log:
-  - navigating to "https://theconversation.com/", waiting until "networkidle"
-
-2026-08-15 16:23:51,164 INFO Still failing for change.org: Page.goto: Navigation to "https://change.org/" is interrupted by another navigation to "https://theconversation.com/us"
-Call log:
-  - navigating to "https://change.org/", waiting until "networkidle"
-
-2026-08-15 16:23:51,558 INFO Still failing for sun.com: Page.goto: Navigation to "https://sun.com/" is interrupted by another navigation to "https://www.change.org/"
+2026-08-15 19:47:13,006 INFO Navigation interrupted for https://outlook.live.com; retrying
+2026-08-15 19:47:13,035 INFO Still failing for outlook.live.com: Evaluate error: Page.evaluate: Execution context was destroyed, most likely because of a navigation
+2026-08-15 19:47:13,558 INFO Navigation interrupted for https://amazon.co.uk; retrying
+2026-08-15 19:47:13,603 INFO Still failing for amazon.co.uk: Evaluate error: Page.evaluate: Execution context was destroyed, most likely because of a navigation
+2026-08-15 19:47:38,608 INFO Still failing for sun.com: Page.goto: Timeout 25000ms exceeded.
 Call log:
   - navigating to "https://sun.com/", waiting until "networkidle"
 
-2026-08-15 16:23:51,799 INFO Still failing for eepurl.com: Page.goto: Navigation to "https://eepurl.com/" is interrupted by another navigation to "https://www.oracle.com/it-infrastructure/"
+2026-08-15 19:48:03,616 INFO Still failing for eepurl.com: Page.goto: Timeout 25000ms exceeded.
 Call log:
   - navigating to "https://eepurl.com/", waiting until "networkidle"
 
-2026-08-15 16:23:52,152 INFO Still failing for vercel.app: Page.goto: Navigation to "https://vercel.app/" is interrupted by another navigation to "https://mailchimp.com/"
+2026-08-15 19:48:28,624 INFO Still failing for mail.ru: Page.goto: Timeout 25000ms exceeded.
 Call log:
-  - navigating to "https://vercel.app/", waiting until "networkidle"
+  - navigating to "https://mail.ru/", waiting until "networkidle"
 
-2026-08-15 16:23:56,017 INFO Fixed upload.wikimedia.org -> sans-serif | Linux Libertine | monospace
-2026-08-15 16:24:01,979 INFO Fixed bund.de -> Times |  | 
-2026-08-15 16:24:37,903 INFO Fixed acs.org -> Helvetica |  | 
-2026-08-15 16:24:38,785 INFO Fixed bls.gov -> Times |  | 
-2026-08-15 16:25:05,695 INFO Fixed engadget.com -> guardian-sans-regular | Arial | guardian-sans-bold
-2026-08-15 16:25:05,718 INFO Progress saved (10 updated so far)
-2026-08-15 16:25:09,312 INFO Fixed my.matterport.com -> Roboto | IBMPlexSans-Bold | Google Sans
-2026-08-15 16:25:12,646 INFO Fixed disqus.com -> Source Sans Pro | slick | Helvetica
-2026-08-15 16:25:39,205 INFO Fixed clevelandclinic.org -> __Roboto_a857ad | __Source_Sans_3_8bd802 | __News_Cycle_da479a
-2026-08-15 16:25:42,230 INFO Fixed service.gov.uk -> GDS Transport | sans-serif | HelveticaNeue
-2026-08-15 16:25:44,667 INFO Fixed senate.gov -> Source Sans Pro | FontAwesome | monospace
-2026-08-15 16:26:10,019 INFO Fixed photobucket.com -> Times |  | 
-2026-08-15 16:26:15,046 INFO Fixed notion.site -> NotionInter | Google Sans | Roboto-Regular
-2026-08-15 16:26:44,239 INFO Fixed hatena.ne.jp -> -apple-system |  | 
-2026-08-15 16:27:36,157 INFO Fixed douyin.com -> PingFang SC | -apple-system | DFP King Gothic GB Medium
-2026-08-15 16:28:26,168 INFO Still failing for mail.ru: Page.goto: Timeout 25000ms exceeded.
-Call log:
-  - navigating to "https://mail.ru/", waiting until "load"
-
-2026-08-15 16:29:00,213 INFO Fixed ey.com -> VideoJS | Material Icons | georgia
-2026-08-15 16:29:00,233 INFO Progress saved (20 updated so far)
-2026-08-15 16:29:27,293 INFO Fixed axios.com -> Inter | slick | 
-2026-08-15 16:29:37,431 INFO Fixed msu.edu -> Metropolis | Font Awesome 6 Free | system-ui
-2026-08-15 16:29:43,536 INFO Fixed nikkei.com -> monospace | -apple-system | Hiragino Kaku Gothic ProN
-2026-08-15 16:29:47,522 INFO Fixed altervista.org -> altervista-fonts | ArialMT | Arial-BoldMT
-2026-08-15 16:29:53,249 INFO Fixed webs.com -> Graphik | Times | 
-2026-08-15 16:29:55,953 INFO Fixed laracasts.com -> Hanken Grotesk |  | 
-2026-08-15 16:29:57,653 INFO Fixed haxx.se -> sans-serif | verdana | 
-2026-08-15 16:30:16,097 INFO Fixed treasury.gov -> Source Sans Pro Web | Merriweather Web | Source Sans Pro
-2026-08-15 16:30:23,800 INFO Fixed accor.com -> montserrat | redHatDisplay | monospace
-2026-08-15 16:30:27,179 INFO Fixed gotowebinar.com -> slick |  | 
-2026-08-15 16:30:27,195 INFO Progress saved (30 updated so far)
-2026-08-15 16:30:33,106 INFO Fixed online.fliphtml5.com -> Inter | Open Sans | helvetica
-2026-08-15 16:30:38,931 INFO Fixed 1688.com -> nc_iconfont |  | 
-2026-08-15 16:31:28,963 INFO Still failing for vkontakte.ru: Page.goto: Timeout 25000ms exceeded.
-Call log:
-  - navigating to "https://vkontakte.ru/", waiting until "load"
-
-2026-08-15 16:31:30,358 INFO Still failing for ea.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://ea.com/
+2026-08-15 19:48:28,789 INFO Still failing for ea.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://ea.com/
 Call log:
   - navigating to "https://ea.com/", waiting until "networkidle"
 
-2026-08-15 16:31:30,920 INFO Still failing for vk.ru: Page.goto: Navigation to "https://vk.ru/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+2026-08-15 19:48:29,022 INFO Navigation interrupted for https://rockstargames.com; retrying
+2026-08-15 19:48:29,057 INFO Still failing for rockstargames.com: Evaluate error: Page.evaluate: Execution context was destroyed, most likely because of a navigation
+2026-08-15 19:48:54,061 INFO Still failing for battle.net: Page.goto: Timeout 25000ms exceeded.
 Call log:
-  - navigating to "https://vk.ru/", waiting until "networkidle"
+  - navigating to "https://battle.net/", waiting until "networkidle"
 
-2026-08-15 16:31:44,880 INFO Fixed douban.com -> Helvetica | Arial | 
-2026-08-15 16:32:13,000 INFO Fixed toutiao.com -> monospace | PingFang SC | ByteNumber-center
-2026-08-15 16:32:17,672 INFO Fixed indiana.edu -> Roboto Flex |  | 
-2026-08-15 16:32:46,532 INFO Fixed lonelyplanet.com -> ABC Monument Grotesk | ABC Arizona Flare | American Grotesk Compressed
-2026-08-15 16:33:11,610 INFO Fixed bell-labs.com -> Times |  | 
-2026-08-15 16:33:26,121 INFO Fixed mega.nz -> Inter |  | 
-2026-08-15 16:33:41,983 INFO Fixed unfccc.int -> Merriweather Sans Regular | Lora Regular | Merriweather Sans Light
-2026-08-15 16:33:42,928 INFO Fixed zlib.net -> Times |  | 
-2026-08-15 16:33:42,956 INFO Progress saved (40 updated so far)
-2026-08-15 16:33:44,471 INFO Fixed site.com -> Times |  | 
-2026-08-15 16:34:20,451 INFO Fixed symantec.com -> Inter | bi2 | brcm
-2026-08-15 16:34:21,477 INFO Fixed libpng.org -> Times |  | 
-2026-08-15 16:34:23,101 INFO Fixed gohugo.io -> Mulish |  | 
-2026-08-15 16:34:24,184 INFO Fixed msdn.com -> Arial |  | 
-2026-08-15 16:34:25,091 INFO Fixed openldap.org -> Arial | Times | 
-2026-08-15 16:34:39,295 INFO Fixed amazon.es -> Arial | Amazon Ember Regular | Amazon Ember
-2026-08-15 16:35:07,862 INFO Fixed cbslocal.com -> Proxima Nova | Publico Headline | Publico Text
-2026-08-15 16:35:32,922 INFO Fixed gzip.org -> Times |  | 
-2026-08-15 16:36:00,457 INFO Fixed philips.com -> neue-frutiger-world-w02 |  | 
-2026-08-15 16:36:00,478 INFO Progress saved (50 updated so far)
-2026-08-15 16:36:04,975 INFO Fixed virustotal.com -> Source Sans Pro | Source Code Pro | Material Icons
-2026-08-15 16:36:08,251 INFO Fixed fastpanel.direct -> Onest |  | 
-2026-08-15 16:36:14,147 INFO Fixed mac.com -> SF Pro HK | SF Pro AR | SF Pro JP
-2026-08-15 16:36:15,400 INFO Fixed chromium.org -> Arial | monospace | 
-2026-08-15 16:36:18,626 INFO Fixed awin1.com -> Inter |  | 
-2026-08-15 16:36:22,785 INFO Fixed biglobe.ne.jp -> M PLUS 1 |  | 
-2026-08-15 16:36:29,385 INFO Fixed unicode.org -> awb-icons | Source Sans Pro | Source Sans 3
-2026-08-15 16:36:30,488 INFO Fixed ijg.org -> Times |  | 
-2026-08-15 16:37:03,989 INFO Fixed amazon.it -> Amazon Ember | VideoJS | Arial
-2026-08-15 16:37:31,544 INFO Fixed dyndns.org -> -apple-system | Lucida Grande | Monospace
-2026-08-15 16:37:31,579 INFO Progress saved (60 updated so far)
-2026-08-15 16:37:37,186 INFO Fixed apache-ssl.org -> -apple-system | Noto Mono | Google Sans
-2026-08-15 16:37:38,763 INFO Fixed nd.edu -> GP | Garamond-Pro | 
-2026-08-15 16:38:12,535 INFO Fixed kakao.com -> KakaoBig | KakaoSmall | KakaoDigitLatin
-2026-08-15 16:38:15,089 INFO Fixed draft.blogger.com -> Roboto | sans-serif | monospace
-2026-08-15 16:38:24,225 INFO Fixed apple.co -> SF Pro HK | SF Pro AR | SF Pro JP
-2026-08-15 16:38:32,325 INFO Fixed dartmouth.edu -> Dartmouth Ruzika | National\ 2 | National2Web
-2026-08-15 16:38:59,302 INFO Fixed cointelegraph.com -> Open Sans |  | 
-2026-08-15 16:39:00,537 INFO Fixed opaque.net -> Times |  | 
-2026-08-15 16:39:04,107 INFO Fixed myportfolio.com -> adobe-clean | adobe-clean-han-japanese | adobe-clean-han-korean
-2026-08-15 16:39:21,783 INFO Fixed in.gov -> Public Sans | Mulish | Readex Pro
-2026-08-15 16:39:21,906 INFO Progress saved (70 updated so far)
-2026-08-15 16:39:31,467 INFO Fixed ct.gov -> Poppins | Arial | Poppins Semibold
-2026-08-15 16:39:40,998 INFO Fixed hexun.com -> 微软雅黑 | ???? | Arial
-2026-08-15 16:40:10,383 INFO Fixed vistaprint.com -> Graphik | system-ui | 
-2026-08-15 16:40:14,297 INFO Fixed missouri.edu -> Open Sans | Manuka | 
-2026-08-15 16:40:21,289 INFO Fixed porsche.com -> Porsche Next | + 2.125ex) Porsche Next, Arial Narrow, Arial, Heiti SC, SimHei, sans-serif | 
-2026-08-15 16:40:30,579 INFO Fixed nus.edu.sg -> FontAwesome | system-ui | SFMono-Regular
-2026-08-15 16:40:49,958 INFO Fixed cnki.net -> Helvetica Neue | Simsun | Arial
-2026-08-15 16:40:55,911 INFO Fixed freewebs.com -> Graphik | Times | 
-2026-08-15 16:40:59,017 INFO Fixed tawk.to -> ui-monospace | Inter | Noto Sans Arabic
-2026-08-15 16:41:31,384 INFO Fixed aaa.com -> Mission Gothic | Mission Gothic Bold | Arial
-2026-08-15 16:41:31,403 INFO Progress saved (80 updated so far)
-2026-08-15 16:41:42,399 INFO Fixed ebscohost.com -> Font Awesome 5 Pro | Noto Sans | Open Sans
-2026-08-15 16:41:43,389 INFO Fixed comcast.net -> Times |  | 
-2026-08-15 16:41:55,683 INFO Fixed wdr.de -> Feather Icons | TheSansC5s | monospace
-2026-08-15 16:42:25,807 INFO Fixed chosun.com -> NotoSansKR-Bold | Noto Sans KR | NotoSansKR-Medium
-2026-08-15 16:42:29,705 INFO Fixed vaticannews.va -> Arial | Museo Sans Cyrl | Noto Sans Armenian
-2026-08-15 16:42:31,364 INFO Fixed sphinx-doc.org -> sans-serif | Consolas | system-ui
-2026-08-15 16:42:37,968 INFO Fixed scoop.it -> Open Sans | Geist Mono | -apple-system
-2026-08-15 16:42:42,043 INFO Fixed zblogcn.com -> iconfont | Helvetica Neue | Penrose
-2026-08-15 16:42:46,127 INFO Fixed ryanair.com -> Roboto |  | 
-2026-08-15 16:42:52,203 INFO Fixed technorati.com -> Roboto | cube-icons | Arial
-2026-08-15 16:42:52,224 INFO Progress saved (90 updated so far)
-2026-08-15 16:42:57,868 INFO Fixed workers.dev -> STK Bureau Sans | -apple-system | system-ui
-2026-08-15 16:43:03,988 INFO Fixed nap.edu -> monospace |  | 
-2026-08-15 16:43:06,963 INFO Fixed maine.gov -> RymanEco-Regular | arial | Google Sans
-2026-08-15 16:43:13,449 INFO Fixed oclc.org -> Graphik Web | Helvetica Neue | Helvetica
-2026-08-15 16:43:41,944 INFO Fixed lenta.ru -> Lato Lenta | Source Serif Pro Lenta | sans-serif
-2026-08-15 16:43:56,938 INFO Fixed nla.gov.au -> Open Sans | STIX Two Text | Arial
-2026-08-15 16:43:58,057 INFO Fixed wikimapia.org -> Times |  | 
-2026-08-15 16:44:04,551 INFO Fixed c212.net -> proxima-nova | proxima-nova-extra-condensed | Arial
-2026-08-15 16:44:05,540 INFO Fixed usaid.gov -> sans-serif |  | 
-2026-08-15 16:44:55,560 INFO Still failing for weibo.cn: Page.goto: Timeout 25000ms exceeded.
+2026-08-15 19:49:19,067 INFO Still failing for ovh.net: Page.goto: Timeout 25000ms exceeded.
 Call log:
-  - navigating to "https://weibo.cn/", waiting until "load"
+  - navigating to "https://ovh.net/", waiting until "networkidle"
 
-2026-08-15 16:44:58,016 INFO Fixed truthsocial.com -> Helvetica | monospace | 
-2026-08-15 16:44:58,035 INFO Progress saved (100 updated so far)
-2026-08-15 16:45:23,308 INFO Still failing for planalto.gov.br: Evaluate error: Page.evaluate: Execution context was destroyed, most likely because of a navigation
-2026-08-15 16:45:27,895 INFO Fixed nypl.org -> system-ui | monospace | Trebuchet MS
-2026-08-15 16:45:28,525 INFO Fixed api.leadconnectorhq.com -> Times |  | 
+2026-08-15 19:49:19,426 INFO Still failing for prf.hn: Page.goto: Download is starting
+Call log:
+  - navigating to "https://prf.hn/", waiting until "networkidle"
+
+2026-08-15 19:49:44,433 INFO Still failing for att.net: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://att.net/", waiting until "networkidle"
+
+2026-08-15 19:50:09,448 INFO Still failing for ballotpedia.org: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://ballotpedia.org/", waiting until "networkidle"
+
+2026-08-15 19:50:34,459 INFO Still failing for proboards.com: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://proboards.com/", waiting until "networkidle"
+
+2026-08-15 19:50:43,633 ERROR Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+2026-08-15 19:50:43,633 ERROR Task was destroyed but it is pending!
+task: <Task cancelling name='Task-41' coro=<Browser.close() done, defined at /Users/tkmaher/Desktop/projects/freelance websites/fontdex/data/.venv/lib/python3.14/site-packages/playwright/_impl/_browser.py:235> wait_for=<Future finished result=None> cb=[SyncBase._sync.<locals>.<lambda>() at /Users/tkmaher/Desktop/projects/freelance websites/fontdex/data/.venv/lib/python3.14/site-packages/playwright/_impl/_sync_base.py:111]>
+2026-08-15 19:50:43,633 ERROR Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+2026-08-15 19:50:43,634 ERROR Task was destroyed but it is pending!
+task: <Task cancelling name='Task-40' coro=<Page.goto() done, defined at /Users/tkmaher/Desktop/projects/freelance websites/fontdex/data/.venv/lib/python3.14/site-packages/playwright/_impl/_page.py:553> wait_for=<Future finished result=None> cb=[SyncBase._sync.<locals>.<lambda>() at /Users/tkmaher/Desktop/projects/freelance websites/fontdex/data/.venv/lib/python3.14/site-packages/playwright/_impl/_sync_base.py:111]>
+2026-08-15 19:51:33,520 INFO 212 rows still blank; retrying with a headless browser
+2026-08-15 19:51:34,923 INFO Still failing for adobe.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://adobe.com/
+Call log:
+  - navigating to "https://adobe.com/", waiting until "networkidle"
+
+2026-08-15 19:51:35,640 INFO Still failing for europa.eu: Page.goto: Navigation to "https://europa.eu/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://europa.eu/", waiting until "networkidle"
+
+2026-08-15 19:51:37,747 INFO Still failing for weibo.com: Page.goto: Navigation to "https://weibo.com/" is interrupted by another navigation to "https://european-union.europa.eu/select-language?destination=/node/1"
+Call log:
+  - navigating to "https://weibo.com/", waiting until "networkidle"
+
+2026-08-15 19:51:37,859 INFO Still failing for get.adobe.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://get.adobe.com/
+Call log:
+  - navigating to "https://get.adobe.com/", waiting until "networkidle"
+
+2026-08-15 19:51:38,013 INFO Still failing for outlook.live.com: Page.goto: Navigation to "https://outlook.live.com/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://outlook.live.com/", waiting until "networkidle"
+
+2026-08-15 19:51:38,530 INFO Still failing for amazon.co.uk: Page.goto: Navigation to "https://amazon.co.uk/" is interrupted by another navigation to "https://outlook.live.com/mail/"
+Call log:
+  - navigating to "https://amazon.co.uk/", waiting until "networkidle"
+
+2026-08-15 19:51:39,133 INFO Still failing for sun.com: Page.goto: Navigation to "https://sun.com/" is interrupted by another navigation to "https://www.amazon.co.uk/"
+Call log:
+  - navigating to "https://sun.com/", waiting until "networkidle"
+
+2026-08-15 19:51:39,422 INFO Still failing for eepurl.com: Page.goto: Navigation to "https://eepurl.com/" is interrupted by another navigation to "https://www.oracle.com/it-infrastructure/"
+Call log:
+  - navigating to "https://eepurl.com/", waiting until "networkidle"
+
+2026-08-15 19:51:41,630 INFO Still failing for mail.ru: Page.goto: Navigation to "https://mail.ru/" is interrupted by another navigation to "https://mailchimp.com/"
+Call log:
+  - navigating to "https://mail.ru/", waiting until "networkidle"
+
+2026-08-15 19:51:41,853 INFO Still failing for ea.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://ea.com/
+Call log:
+  - navigating to "https://ea.com/", waiting until "networkidle"
+
+2026-08-15 19:51:42,044 INFO Still failing for rockstargames.com: Page.goto: Navigation to "https://rockstargames.com/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://rockstargames.com/", waiting until "networkidle"
+
+2026-08-15 19:51:43,109 INFO Still failing for battle.net: Page.goto: Navigation to "https://battle.net/" is interrupted by another navigation to "https://www.rockstargames.com/"
+Call log:
+  - navigating to "https://battle.net/", waiting until "networkidle"
+
+2026-08-15 19:51:44,014 INFO Still failing for ovh.net: Page.goto: Navigation to "https://ovh.net/" is interrupted by another navigation to "https://us.shop.battle.net/en-us?from=root#optLogin=true"
+Call log:
+  - navigating to "https://ovh.net/", waiting until "networkidle"
+
+2026-08-15 19:51:44,405 INFO Still failing for prf.hn: Page.goto: Download is starting
+Call log:
+  - navigating to "https://prf.hn/", waiting until "networkidle"
+
+2026-08-15 19:52:14,564 INFO Fixed att.net -> YA Sans VF | centra | gelica
+2026-08-15 19:52:39,751 INFO Still failing for ballotpedia.org: Evaluate error: Page.evaluate: Execution context was destroyed, most likely because of a navigation
+2026-08-15 19:53:29,769 INFO Still failing for proboards.com: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://proboards.com/", waiting until "load"
+
+2026-08-15 19:54:00,577 INFO Fixed t.cn -> VideoJS | weiboficon | PingFang SC
+2026-08-15 19:54:50,588 INFO Still failing for paulgraham.com: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://paulgraham.com/", waiting until "load"
+
+2026-08-15 19:54:52,040 INFO No fonts found for fpdf.org even with a real browser
+2026-08-15 19:54:52,369 INFO Still failing for magento.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://magento.com/
+Call log:
+  - navigating to "https://magento.com/", waiting until "networkidle"
+
+2026-08-15 19:54:52,859 INFO Still failing for ultimate-guitar.com: Page.goto: Navigation to "https://ultimate-guitar.com/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://ultimate-guitar.com/", waiting until "networkidle"
+
+2026-08-15 19:54:53,116 INFO Still failing for marieclaire.com: Page.goto: Navigation to "https://marieclaire.com/" is interrupted by another navigation to "https://www.ultimate-guitar.com/"
+Call log:
+  - navigating to "https://marieclaire.com/", waiting until "networkidle"
+
+2026-08-15 19:54:53,437 INFO Still failing for hackerone.com: Page.goto: Navigation to "https://hackerone.com/" is interrupted by another navigation to "https://www.marieclaire.com/"
+Call log:
+  - navigating to "https://hackerone.com/", waiting until "networkidle"
+
+2026-08-15 19:54:53,744 INFO Still failing for androidcentral.com: Page.goto: Navigation to "https://androidcentral.com/" is interrupted by another navigation to "https://www.hackerone.com/"
+Call log:
+  - navigating to "https://androidcentral.com/", waiting until "networkidle"
+
+2026-08-15 19:54:54,638 INFO Still failing for telegraaf.nl: Page.goto: Navigation to "https://telegraaf.nl/" is interrupted by another navigation to "https://www.androidcentral.com/"
+Call log:
+  - navigating to "https://telegraaf.nl/", waiting until "networkidle"
+
+2026-08-15 19:54:56,133 INFO Still failing for most.gov.cn: Page.goto: Navigation to "https://most.gov.cn/" is interrupted by another navigation to "https://www.telegraaf.nl/"
+Call log:
+  - navigating to "https://most.gov.cn/", waiting until "networkidle"
+
+2026-08-15 19:54:57,262 INFO Still failing for s-gift.app: Page.goto: Navigation to "https://s-gift.app/" is interrupted by another navigation to "https://most.gov.cn/"
+Call log:
+  - navigating to "https://s-gift.app/", waiting until "networkidle"
+
+2026-08-15 19:54:58,027 INFO Still failing for px.a8.net: Page.goto: Navigation to "https://px.a8.net/" is interrupted by another navigation to "https://www.s-gift.app/"
+Call log:
+  - navigating to "https://px.a8.net/", waiting until "networkidle"
+
+2026-08-15 19:54:59,394 INFO Still failing for excite.co.jp: Page.goto: Navigation to "https://excite.co.jp/" is interrupted by another navigation to "https://px.a8.net/"
+Call log:
+  - navigating to "https://excite.co.jp/", waiting until "networkidle"
+
+2026-08-15 19:55:00,201 INFO Still failing for taipeitimes.com: Page.goto: Navigation to "https://taipeitimes.com/" is interrupted by another navigation to "https://www.excite.co.jp/"
+Call log:
+  - navigating to "https://taipeitimes.com/", waiting until "networkidle"
+
+2026-08-15 19:55:00,608 INFO Still failing for financialcontent.com: Page.goto: Navigation to "https://financialcontent.com/" is interrupted by another navigation to "https://www.taipeitimes.com/"
+Call log:
+  - navigating to "https://financialcontent.com/", waiting until "networkidle"
+
+2026-08-15 19:55:00,988 INFO Still failing for vanguard.com: Page.goto: Navigation to "https://vanguard.com/" is interrupted by another navigation to "https://www.financialcontent.com/stocks"
+Call log:
+  - navigating to "https://vanguard.com/", waiting until "networkidle"
+
+2026-08-15 19:55:02,953 INFO Still failing for evolution.com: Page.goto: Navigation to "https://evolution.com/" is interrupted by another navigation to "https://investor.vanguard.com/corporate-portal"
+Call log:
+  - navigating to "https://evolution.com/", waiting until "networkidle"
+
+2026-08-15 19:55:03,520 INFO Still failing for sina.com: Page.goto: Navigation to "https://sina.com/" is interrupted by another navigation to "https://www.evolution.com/"
+Call log:
+  - navigating to "https://sina.com/", waiting until "networkidle"
+
+2026-08-15 19:55:04,585 INFO Still failing for wenming.cn: Page.goto: Navigation to "https://wenming.cn/" is interrupted by another navigation to "https://sina.com/"
+Call log:
+  - navigating to "https://wenming.cn/", waiting until "networkidle"
+
+2026-08-15 19:55:04,690 INFO Still failing for bioone.org: Page.goto: Navigation to "https://bioone.org/" is interrupted by another navigation to "http://wenming.cn/"
+Call log:
+  - navigating to "https://bioone.org/", waiting until "networkidle"
+
+2026-08-15 19:55:05,447 INFO Still failing for canadiantire.ca: Page.goto: Navigation to "https://canadiantire.ca/" is interrupted by another navigation to "https://bioone.org/"
+Call log:
+  - navigating to "https://canadiantire.ca/", waiting until "networkidle"
+
+2026-08-15 19:55:06,924 INFO Still failing for nhk.jp: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://nhk.jp/
+Call log:
+  - navigating to "https://nhk.jp/", waiting until "networkidle"
+
+2026-08-15 19:55:09,505 INFO Still failing for ircam.fr: Page.goto: Navigation to "https://ircam.fr/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://ircam.fr/", waiting until "networkidle"
+
+2026-08-15 19:55:10,083 INFO Still failing for wellandgood.com: Page.goto: Navigation to "https://wellandgood.com/" is interrupted by another navigation to "https://www.ircam.fr/fr"
+Call log:
+  - navigating to "https://wellandgood.com/", waiting until "networkidle"
+
+2026-08-15 19:55:10,751 INFO Still failing for nrc.gov: Page.goto: Navigation to "https://nrc.gov/" is interrupted by another navigation to "https://www.theskimm.com/"
+Call log:
+  - navigating to "https://nrc.gov/", waiting until "networkidle"
+
+2026-08-15 19:55:11,331 INFO Still failing for wisegeek.com: Page.goto: Navigation to "https://wisegeek.com/" is interrupted by another navigation to "https://www.nrc.gov/"
+Call log:
+  - navigating to "https://wisegeek.com/", waiting until "networkidle"
+
+2026-08-15 19:55:13,439 INFO Still failing for s.id: Page.goto: Navigation to "https://s.id/" is interrupted by another navigation to "https://www.wisegeek.com/"
+Call log:
+  - navigating to "https://s.id/", waiting until "networkidle"
+
+2026-08-15 19:55:14,251 INFO Still failing for skyscanner.com: Page.goto: Navigation to "https://skyscanner.com/" is interrupted by another navigation to "https://home.s.id/gl/en"
+Call log:
+  - navigating to "https://skyscanner.com/", waiting until "networkidle"
+
+2026-08-15 19:55:15,671 INFO Still failing for it168.com: Page.goto: Navigation to "https://it168.com/" is interrupted by another navigation to "https://www.skyscanner.com/"
+Call log:
+  - navigating to "https://it168.com/", waiting until "networkidle"
+
+2026-08-15 19:55:16,102 INFO Still failing for pypa.io: Page.goto: Navigation to "https://pypa.io/" is interrupted by another navigation to "https://it168.com/"
+Call log:
+  - navigating to "https://pypa.io/", waiting until "networkidle"
+
+2026-08-15 19:55:16,479 INFO Still failing for mega.co.nz: Page.goto: Navigation to "https://mega.co.nz/" is interrupted by another navigation to "https://www.pypa.io/en/latest/"
+Call log:
+  - navigating to "https://mega.co.nz/", waiting until "networkidle"
+
+2026-08-15 19:55:18,313 INFO Still failing for nic.ru: Page.goto: Navigation to "https://nic.ru/" is interrupted by another navigation to "https://mega.co.nz/"
+Call log:
+  - navigating to "https://nic.ru/", waiting until "networkidle"
+
+2026-08-15 19:55:21,878 INFO Still failing for sciencespo.fr: Page.goto: Navigation to "https://sciencespo.fr/" is interrupted by another navigation to "https://nic.ru/"
+Call log:
+  - navigating to "https://sciencespo.fr/", waiting until "networkidle"
+
+2026-08-15 19:55:22,056 INFO Still failing for musicradar.com: Page.goto: Navigation to "https://musicradar.com/" is interrupted by another navigation to "https://www.sciencespo.fr/"
+Call log:
+  - navigating to "https://musicradar.com/", waiting until "networkidle"
+
+2026-08-15 19:55:22,325 INFO Still failing for aenetworks.tv: Page.goto: Navigation to "https://aenetworks.tv/" is interrupted by another navigation to "https://www.musicradar.com/"
+Call log:
+  - navigating to "https://aenetworks.tv/", waiting until "networkidle"
+
+2026-08-15 19:55:22,488 INFO Still failing for playbill.com: Page.goto: Navigation to "https://playbill.com/" is interrupted by another navigation to "https://www.hearstnetworks.com/"
+Call log:
+  - navigating to "https://playbill.com/", waiting until "networkidle"
+
+2026-08-15 19:55:23,021 INFO Still failing for geni.us: Page.goto: Navigation to "https://geni.us/" is interrupted by another navigation to "https://playbill.com/"
+Call log:
+  - navigating to "https://geni.us/", waiting until "networkidle"
+
+2026-08-15 19:55:25,644 INFO Still failing for 53kf.com: Page.goto: Navigation to "https://53kf.com/" is interrupted by another navigation to "https://geniuslink.com/"
+Call log:
+  - navigating to "https://53kf.com/", waiting until "networkidle"
+
+2026-08-15 19:55:26,657 INFO Still failing for fiba.basketball: Page.goto: Navigation to "https://fiba.basketball/" is interrupted by another navigation to "https://www.53kf.com/"
+Call log:
+  - navigating to "https://fiba.basketball/", waiting until "networkidle"
+
+2026-08-15 19:55:26,981 INFO Still failing for ralphlauren.com: Page.goto: Navigation to "https://ralphlauren.com/" is interrupted by another navigation to "https://www.fiba.basketball/en"
+Call log:
+  - navigating to "https://ralphlauren.com/", waiting until "networkidle"
+
+2026-08-15 19:55:27,313 INFO Still failing for vfsglobal.com: Page.goto: Navigation to "https://vfsglobal.com/" is interrupted by another navigation to "https://www.ralphlauren.com/"
+Call log:
+  - navigating to "https://vfsglobal.com/", waiting until "networkidle"
+
+2026-08-15 19:55:27,686 INFO Still failing for adyen.com: Page.goto: Navigation to "https://adyen.com/" is interrupted by another navigation to "https://www.vfsglobal.com/en/individuals/index.html"
+Call log:
+  - navigating to "https://adyen.com/", waiting until "networkidle"
+
+2026-08-15 19:55:30,068 INFO Still failing for prosieben.de: Page.goto: Navigation to "https://prosieben.de/" is interrupted by another navigation to "https://www.adyen.com/"
+Call log:
+  - navigating to "https://prosieben.de/", waiting until "networkidle"
+
+2026-08-15 19:55:30,822 INFO Still failing for renfe.com: Page.goto: Navigation to "https://renfe.com/" is interrupted by another navigation to "https://www.joyn.de/mediatheken/prosieben"
+Call log:
+  - navigating to "https://renfe.com/", waiting until "networkidle"
+
+2026-08-15 19:55:33,641 INFO Still failing for topelec.com.cn: Page.goto: Navigation to "https://topelec.com.cn/" is interrupted by another navigation to "https://www.renfe.com/es/en"
+Call log:
+  - navigating to "https://topelec.com.cn/", waiting until "networkidle"
+
+2026-08-15 19:55:35,685 INFO Still failing for univ-lyon1.fr: Page.goto: Navigation to "https://univ-lyon1.fr/" is interrupted by another navigation to "https://www.topelec.com.cn/zh"
+Call log:
+  - navigating to "https://univ-lyon1.fr/", waiting until "networkidle"
+
+2026-08-15 19:55:35,795 INFO Still failing for poki.com: Page.goto: Navigation to "https://poki.com/" is interrupted by another navigation to "https://www.univ-lyon1.fr/"
+Call log:
+  - navigating to "https://poki.com/", waiting until "networkidle"
+
+2026-08-15 19:55:36,048 INFO Still failing for sebrae.com.br: Page.goto: Navigation to "https://sebrae.com.br/" is interrupted by another navigation to "https://poki.com/"
+Call log:
+  - navigating to "https://sebrae.com.br/", waiting until "networkidle"
+
+2026-08-15 19:55:36,261 INFO Still failing for itunes.com: Page.goto: Navigation to "https://itunes.com/" is interrupted by another navigation to "https://sebrae.com.br/"
+Call log:
+  - navigating to "https://itunes.com/", waiting until "networkidle"
+
+2026-08-15 19:56:26,275 INFO Still failing for tu-dortmund.de: Page.goto: Timeout 25000ms exceeded.
+Call log:
+  - navigating to "https://tu-dortmund.de/", waiting until "load"
+
+2026-08-15 19:56:27,711 INFO Fixed rubygems.org -> Titillium Web |  | 
+2026-08-15 19:56:34,474 INFO Fixed ncku.edu.tw -> Segoe UI |  | 
+2026-08-15 19:56:35,364 INFO Fixed lightpokies.org -> Times |  | 
+2026-08-15 19:56:42,319 INFO Fixed shjyun.com -> Font Awesome 6 Free | PingFang SC | Font Awesome 6 Brands
+2026-08-15 19:56:45,164 INFO Fixed asrock.com -> Trebuchet MS | Saira | tahoma
+2026-08-15 19:56:53,544 INFO Fixed miamidade.gov -> arial | FontAwesome | Material Icons
+2026-08-15 19:56:57,129 INFO Fixed wmagazine.com -> Galliard | Whitman | Arial
+2026-08-15 19:57:24,022 INFO Fixed gardeningknowhow.com -> Inter |  | 
+2026-08-15 19:57:24,041 INFO Progress saved (10 updated so far)
+2026-08-15 19:57:27,123 INFO Fixed trendyol.com -> monospace | icomoon | Source Sans Pro
+2026-08-15 19:57:47,122 INFO Fixed userapi.com -> -apple-system | VK Sans Display | Lucida Sans
+2026-08-15 19:57:47,950 INFO Still failing for koreanair.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://koreanair.com/
+Call log:
+  - navigating to "https://koreanair.com/", waiting until "networkidle"
+
+2026-08-15 19:57:48,350 INFO Still failing for roulettino-casino.org: Page.goto: Navigation to "https://roulettino-casino.org/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://roulettino-casino.org/", waiting until "networkidle"
+
+2026-08-15 19:57:48,829 INFO Still failing for krita.org: Page.goto: Navigation to "https://krita.org/" is interrupted by another navigation to "https://roulettino-casino.org/"
+Call log:
+  - navigating to "https://krita.org/", waiting until "networkidle"
+
+2026-08-15 19:57:50,601 INFO Still failing for westlaw.com: Page.goto: Navigation to "https://westlaw.com/" is interrupted by another navigation to "https://krita.org/"
+Call log:
+  - navigating to "https://westlaw.com/", waiting until "networkidle"
+
+2026-08-15 19:57:51,244 INFO Still failing for grundfos.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://grundfos.com/
+Call log:
+  - navigating to "https://grundfos.com/", waiting until "networkidle"
+
+2026-08-15 19:57:51,455 INFO Still failing for laptopmag.com: Page.goto: Navigation to "https://laptopmag.com/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://laptopmag.com/", waiting until "networkidle"
+
+2026-08-15 19:57:52,207 INFO Still failing for c-and-a.com: Page.goto: Navigation to "https://c-and-a.com/" is interrupted by another navigation to "https://www.laptopmag.com/"
+Call log:
+  - navigating to "https://c-and-a.com/", waiting until "networkidle"
+
+2026-08-15 19:57:52,726 INFO Still failing for bcm.edu: Page.goto: Navigation to "https://bcm.edu/" is interrupted by another navigation to "https://www.c-and-a.com/eu/en/shop?showCountrySelector=true"
+Call log:
+  - navigating to "https://bcm.edu/", waiting until "networkidle"
+
+2026-08-15 19:57:53,367 INFO Still failing for billionaire-spin.io: Page.goto: Navigation to "https://billionaire-spin.io/" is interrupted by another navigation to "https://www.bcm.edu/"
+Call log:
+  - navigating to "https://billionaire-spin.io/", waiting until "networkidle"
+
+2026-08-15 19:57:53,651 INFO Still failing for marketo.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://marketo.com/
+Call log:
+  - navigating to "https://marketo.com/", waiting until "networkidle"
+
+2026-08-15 19:57:53,740 INFO Still failing for 247sports.com: Page.goto: Navigation to "https://247sports.com/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://247sports.com/", waiting until "networkidle"
+
+2026-08-15 19:57:55,204 INFO Still failing for hnkgdh.cn: Page.goto: Navigation to "https://hnkgdh.cn/" is interrupted by another navigation to "https://247sports.com/"
+Call log:
+  - navigating to "https://hnkgdh.cn/", waiting until "networkidle"
+
+2026-08-15 19:57:55,561 INFO Still failing for short.gy: Page.goto: Navigation to "https://short.gy/" is interrupted by another navigation to "https://hnkgdh.cn/"
+Call log:
+  - navigating to "https://short.gy/", waiting until "networkidle"
+
+2026-08-15 19:57:55,820 INFO Still failing for cnsnews.com: Page.goto: Navigation to "https://cnsnews.com/" is interrupted by another navigation to "https://short.io/"
+Call log:
+  - navigating to "https://cnsnews.com/", waiting until "networkidle"
+
+2026-08-15 19:57:56,217 INFO Still failing for huduser.gov: Page.goto: Navigation to "https://huduser.gov/" is interrupted by another navigation to "https://newsbusters.org/cnsnews"
+Call log:
+  - navigating to "https://huduser.gov/", waiting until "networkidle"
+
+2026-08-15 19:57:57,003 INFO Still failing for banki.ru: Page.goto: Navigation to "https://banki.ru/" is interrupted by another navigation to "https://www.huduser.gov/"
+Call log:
+  - navigating to "https://banki.ru/", waiting until "networkidle"
+
+2026-08-15 19:57:57,110 INFO Still failing for menafn.com: Page.goto: Navigation to "https://menafn.com/" is interrupted by another navigation to "https://banki.ru/"
+Call log:
+  - navigating to "https://menafn.com/", waiting until "networkidle"
+
+2026-08-15 19:57:57,469 INFO Still failing for yoyospins.net: Page.goto: Navigation to "https://yoyospins.net/" is interrupted by another navigation to "https://menafn.com/"
+Call log:
+  - navigating to "https://yoyospins.net/", waiting until "networkidle"
+
+2026-08-15 19:57:58,779 INFO Still failing for umk.pl: Page.goto: Navigation to "https://umk.pl/" is interrupted by another navigation to "https://yoyospins.net/"
+Call log:
+  - navigating to "https://umk.pl/", waiting until "networkidle"
+
+2026-08-15 19:57:59,099 INFO Still failing for billionaire-spins.com: Page.goto: Navigation to "https://billionaire-spins.com/" is interrupted by another navigation to "https://www.umk.pl/"
+Call log:
+  - navigating to "https://billionaire-spins.com/", waiting until "networkidle"
+
+2026-08-15 19:57:59,541 INFO Still failing for ankiweb.net: Page.goto: Navigation to "https://ankiweb.net/" is interrupted by another navigation to "https://billionaire-spins.com/"
+Call log:
+  - navigating to "https://ankiweb.net/", waiting until "networkidle"
+
+2026-08-15 19:58:01,114 INFO Still failing for d-nb.info: Page.goto: Navigation to "https://d-nb.info/" is interrupted by another navigation to "https://ankiweb.net/"
+Call log:
+  - navigating to "https://d-nb.info/", waiting until "networkidle"
+
+2026-08-15 19:58:01,817 INFO Still failing for um.dk: Page.goto: Navigation to "https://um.dk/" is interrupted by another navigation to "https://portal.dnb.de/"
+Call log:
+  - navigating to "https://um.dk/", waiting until "networkidle"
+
+2026-08-15 19:58:02,015 INFO Still failing for whowhatwear.com: Page.goto: Navigation to "https://whowhatwear.com/" is interrupted by another navigation to "https://um.dk/"
+Call log:
+  - navigating to "https://whowhatwear.com/", waiting until "networkidle"
+
+2026-08-15 19:58:02,506 INFO Still failing for mediabistro.com: Page.goto: Navigation to "https://mediabistro.com/" is interrupted by another navigation to "https://www.whowhatwear.com/"
+Call log:
+  - navigating to "https://mediabistro.com/", waiting until "networkidle"
+
+2026-08-15 19:58:02,711 INFO Still failing for spiedigitallibrary.org: Page.goto: Navigation to "https://spiedigitallibrary.org/" is interrupted by another navigation to "https://www.mediabistro.com/"
+Call log:
+  - navigating to "https://spiedigitallibrary.org/", waiting until "networkidle"
+
+2026-08-15 19:58:03,305 INFO Still failing for vagrantup.com: Page.goto: Navigation to "https://vagrantup.com/" is interrupted by another navigation to "https://www.spiedigitallibrary.org/"
+Call log:
+  - navigating to "https://vagrantup.com/", waiting until "networkidle"
+
+2026-08-15 19:58:03,568 INFO Still failing for yummly.com: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://yummly.com/
+Call log:
+  - navigating to "https://yummly.com/", waiting until "networkidle"
+
+2026-08-15 19:58:05,199 INFO Still failing for home.saxo: Page.goto: Navigation to "https://home.saxo/" is interrupted by another navigation to "chrome-error://chromewebdata/"
+Call log:
+  - navigating to "https://home.saxo/", waiting until "networkidle"
+
+2026-08-15 19:58:06,080 INFO Still failing for pap.pl: Page.goto: Navigation to "https://pap.pl/" is interrupted by another navigation to "https://www.home.saxo/"
+Call log:
+  - navigating to "https://pap.pl/", waiting until "networkidle"
+
+2026-08-15 19:58:06,371 INFO Still failing for goodtherapy.org: Page.goto: Navigation to "https://goodtherapy.org/" is interrupted by another navigation to "https://www.pap.pl/"
+Call log:
+  - navigating to "https://goodtherapy.org/", waiting until "networkidle"
+
+2026-08-15 19:58:06,713 INFO Still failing for fair-spins-casino.net: Page.goto: Navigation to "https://fair-spins-casino.net/" is interrupted by another navigation to "https://www.goodtherapy.org/"
+Call log:
+  - navigating to "https://fair-spins-casino.net/", waiting until "networkidle"
+
+2026-08-15 19:58:06,842 INFO Still failing for wolt.com: Page.goto: Navigation to "https://wolt.com/" is interrupted by another navigation to "https://fair-spins-casino.net/"
+Call log:
+  - navigating to "https://wolt.com/", waiting until "networkidle"
+
+2026-08-15 19:58:07,176 INFO Still failing for goop.com: Page.goto: Navigation to "https://goop.com/" is interrupted by another navigation to "https://wolt.com/"
+Call log:
+  - navigating to "https://goop.com/", waiting until "networkidle"
+
+2026-08-15 19:58:07,762 INFO Still failing for rosettastone.com: Page.goto: Navigation to "https://rosettastone.com/" is interrupted by another navigation to "https://goop.com/"
+Call log:
+  - navigating to "https://rosettastone.com/", waiting until "networkidle"
+
+2026-08-15 19:58:08,164 INFO Still failing for heinonline.org: Page.goto: Navigation to "https://heinonline.org/" is interrupted by another navigation to "https://www.rosettastone.com/"
+Call log:
+  - navigating to "https://heinonline.org/", waiting until "networkidle"
+
+2026-08-15 19:58:08,514 INFO Still failing for spybett.net: Page.goto: Navigation to "https://spybett.net/" is interrupted by another navigation to "https://access.heinonline.com/"
+Call log:
+  - navigating to "https://spybett.net/", waiting until "networkidle"
+
+2026-08-15 19:58:08,811 INFO Still failing for surveygizmo.com: Page.goto: Navigation to "https://surveygizmo.com/" is interrupted by another navigation to "https://spybett.net/"
+Call log:
+  - navigating to "https://surveygizmo.com/", waiting until "networkidle"
+
+2026-08-15 19:58:09,488 INFO Still failing for ita-airways.com: Page.goto: Navigation to "https://ita-airways.com/" is interrupted by another navigation to "https://www.surveygizmo.com/"
+Call log:
+  - navigating to "https://ita-airways.com/", waiting until "networkidle"
+
+2026-08-15 19:58:09,870 INFO Still failing for bk.com: Page.goto: Navigation to "https://bk.com/" is interrupted by another navigation to "https://www.ita-airways.com/us/en/homepage"
+Call log:
+  - navigating to "https://bk.com/", waiting until "networkidle"
+
+2026-08-15 19:58:09,993 INFO Still failing for radio.com: Page.goto: Navigation to "https://radio.com/" is interrupted by another navigation to "https://www.bk.com/"
+Call log:
+  - navigating to "https://radio.com/", waiting until "networkidle"
+
+2026-08-15 19:58:10,937 INFO Still failing for interno.gov.it: Page.goto: Navigation to "https://interno.gov.it/" is interrupted by another navigation to "https://radio.com/"
+Call log:
+  - navigating to "https://interno.gov.it/", waiting until "networkidle"
+
+2026-08-15 19:58:11,563 INFO Still failing for sho.com: Page.goto: Navigation to "https://sho.com/" is interrupted by another navigation to "https://www.interno.gov.it/it"
+Call log:
+  - navigating to "https://sho.com/", waiting until "networkidle"
+
+2026-08-15 19:58:11,723 INFO Still failing for airliners.net: Page.goto: Navigation to "https://airliners.net/" is interrupted by another navigation to "https://www.paramountplus.com/brands/showtime/"
+Call log:
+  - navigating to "https://airliners.net/", waiting until "networkidle"
+
+2026-08-15 19:58:13,323 INFO Still failing for txsmtyl.net: Page.goto: Navigation to "https://txsmtyl.net/" is interrupted by another navigation to "https://airliners.net/"
+Call log:
+  - navigating to "https://txsmtyl.net/", waiting until "networkidle"
+
+2026-08-15 19:58:13,514 INFO Still failing for bento.me: Page.goto: Navigation to "https://bento.me/" is interrupted by another navigation to "https://txsmtyl.net/"
+Call log:
+  - navigating to "https://bento.me/", waiting until "networkidle"
+
+2026-08-15 19:58:14,507 INFO Still failing for aacap.org: Page.goto: Navigation to "https://aacap.org/" is interrupted by another navigation to "https://linktr.ee/"
+Call log:
+  - navigating to "https://aacap.org/", waiting until "networkidle"
+
+2026-08-15 19:58:17,866 INFO Still failing for inra.fr: Page.goto: Navigation to "https://inra.fr/" is interrupted by another navigation to "https://www.aacap.org/"
+Call log:
+  - navigating to "https://inra.fr/", waiting until "networkidle"
+
+2026-08-15 19:58:18,268 INFO Still failing for doingbusiness.org: Page.goto: Navigation to "https://doingbusiness.org/" is interrupted by another navigation to "https://www.inrae.fr/"
+Call log:
+  - navigating to "https://doingbusiness.org/", waiting until "networkidle"
+
+2026-08-15 19:58:25,922 INFO Still failing for scielo.org.mx: Page.goto: Navigation to "https://scielo.org.mx/" is interrupted by another navigation to "https://www.worldbank.org/en/businessready"
+Call log:
+  - navigating to "https://scielo.org.mx/", waiting until "networkidle"
+
+2026-08-15 19:58:27,526 INFO Still failing for jyjinsuisy.com: Page.goto: Navigation to "https://jyjinsuisy.com/" is interrupted by another navigation to "https://scielo.org.mx/scielo.php"
+Call log:
+  - navigating to "https://jyjinsuisy.com/", waiting until "networkidle"
+
+2026-08-15 19:58:27,623 INFO Still failing for kodi.tv: Page.goto: Navigation to "https://kodi.tv/" is interrupted by another navigation to "https://jyjinsuisy.com/"
+Call log:
+  - navigating to "https://kodi.tv/", waiting until "networkidle"
+
+2026-08-15 19:58:27,745 INFO Still failing for downforeveryoneorjustme.com: Page.goto: Navigation to "https://downforeveryoneorjustme.com/" is interrupted by another navigation to "https://kodi.tv/"
+Call log:
+  - navigating to "https://downforeveryoneorjustme.com/", waiting until "networkidle"
+
+2026-08-15 19:58:27,989 INFO Still failing for dslreports.com: Page.goto: Navigation to "https://dslreports.com/" is interrupted by another navigation to "https://downforeveryoneorjustme.com/"
+Call log:
+  - navigating to "https://dslreports.com/", waiting until "networkidle"
+
+2026-08-15 19:58:30,306 INFO Still failing for elsevier.es: Page.goto: Navigation to "https://elsevier.es/" is interrupted by another navigation to "https://dslreports.com/"
+Call log:
+  - navigating to "https://elsevier.es/", waiting until "networkidle"
+
+2026-08-15 19:58:31,472 INFO Still failing for xueqiu.com: Page.goto: Navigation to "https://xueqiu.com/" is interrupted by another navigation to "https://www.elsevier.com/es-es"
+Call log:
+  - navigating to "https://xueqiu.com/", waiting until "networkidle"
+
+2026-08-15 19:58:32,941 INFO Still failing for tmweb.ru: Page.goto: Navigation to "https://tmweb.ru/" is interrupted by another navigation to "https://xueqiu.com/"
+Call log:
+  - navigating to "https://tmweb.ru/", waiting until "networkidle"
+
+2026-08-15 19:58:33,225 INFO Still failing for harrods.com: Page.goto: Navigation to "https://harrods.com/" is interrupted by another navigation to "https://timeweb.com/"
+Call log:
+  - navigating to "https://harrods.com/", waiting until "networkidle"
+
+2026-08-15 19:58:33,845 INFO Still failing for bloomingdales.com: Page.goto: Navigation to "https://bloomingdales.com/" is interrupted by another navigation to "https://www.harrods.com/"
+Call log:
+  - navigating to "https://bloomingdales.com/", waiting until "networkidle"
+
+2026-08-15 19:58:34,068 INFO Still failing for insighttimer.com: Page.goto: Navigation to "https://insighttimer.com/" is interrupted by another navigation to "https://www.bloomingdales.com/"
+Call log:
+  - navigating to "https://insighttimer.com/", waiting until "networkidle"
+
+2026-08-15 19:58:35,666 INFO Still failing for sysinternals.com: Page.goto: Navigation to "https://sysinternals.com/" is interrupted by another navigation to "https://insighttimer.com/"
+Call log:
+  - navigating to "https://sysinternals.com/", waiting until "networkidle"
+
+2026-08-15 19:58:35,982 INFO Still failing for eurovision.tv: Page.goto: Navigation to "https://eurovision.tv/" is interrupted by another navigation to "https://learn.microsoft.com/en-us/sysinternals/"
+Call log:
+  - navigating to "https://eurovision.tv/", waiting until "networkidle"
+
+2026-08-15 19:58:38,631 INFO Still failing for uni-rostock.de: Page.goto: Navigation to "https://uni-rostock.de/" is interrupted by another navigation to "https://www.eurovision.com/"
+Call log:
+  - navigating to "https://uni-rostock.de/", waiting until "networkidle"
+
+2026-08-15 19:58:40,610 INFO Still failing for geonames.org: Page.goto: Navigation to "https://geonames.org/" is interrupted by another navigation to "https://www.uni-rostock.de/"
+Call log:
+  - navigating to "https://geonames.org/", waiting until "networkidle"
+
+2026-08-15 19:58:40,822 INFO Still failing for digitalcameraworld.com: Page.goto: Navigation to "https://digitalcameraworld.com/" is interrupted by another navigation to "http://www.geonames.org/"
+Call log:
+  - navigating to "https://digitalcameraworld.com/", waiting until "networkidle"
+
+2026-08-15 19:58:41,509 INFO Still failing for toptenreviews.com: Page.goto: Navigation to "https://toptenreviews.com/" is interrupted by another navigation to "https://www.digitalcameraworld.com/"
+Call log:
+  - navigating to "https://toptenreviews.com/", waiting until "networkidle"
+
+2026-08-15 19:58:41,695 INFO Still failing for nanowrimo.org: Page.goto: Navigation to "https://nanowrimo.org/" is interrupted by another navigation to "https://www.toptenreviews.com/"
+Call log:
+  - navigating to "https://nanowrimo.org/", waiting until "networkidle"
+
+2026-08-15 19:58:42,127 INFO Still failing for montereybayaquarium.org: Page.goto: Navigation to "https://montereybayaquarium.org/" is interrupted by another navigation to "https://nanowrimo.org/"
+Call log:
+  - navigating to "https://montereybayaquarium.org/", waiting until "networkidle"
+
+2026-08-15 19:58:43,440 INFO Still failing for stat.gov.pl: Page.goto: Navigation to "https://stat.gov.pl/" is interrupted by another navigation to "https://www.montereybayaquarium.org/"
+Call log:
+  - navigating to "https://stat.gov.pl/", waiting until "networkidle"
+
+2026-08-15 19:58:43,698 INFO Still failing for ipfs.io: Page.goto: Navigation to "https://ipfs.io/" is interrupted by another navigation to "https://new.stat.gov.pl/"
+Call log:
+  - navigating to "https://ipfs.io/", waiting until "networkidle"
+
+2026-08-15 19:58:44,276 INFO Still failing for pnnl.gov: Page.goto: Navigation to "https://pnnl.gov/" is interrupted by another navigation to "https://about.ipfs.io/"
+Call log:
+  - navigating to "https://pnnl.gov/", waiting until "networkidle"
+
+2026-08-15 19:58:46,727 INFO Still failing for hannovermesse.de: Page.goto: Navigation to "https://hannovermesse.de/" is interrupted by another navigation to "https://www.pnnl.gov/"
+Call log:
+  - navigating to "https://hannovermesse.de/", waiting until "networkidle"
+
+2026-08-15 19:58:46,875 INFO Still failing for berkshirehathaway.com: Page.goto: Navigation to "https://berkshirehathaway.com/" is interrupted by another navigation to "https://www.hannovermesse.de/"
+Call log:
+  - navigating to "https://berkshirehathaway.com/", waiting until "networkidle"
+
+2026-08-15 19:58:47,086 INFO Still failing for skyscrapercity.com: Page.goto: Navigation to "https://skyscrapercity.com/" is interrupted by another navigation to "https://berkshirehathaway.com/"
+Call log:
+  - navigating to "https://skyscrapercity.com/", waiting until "networkidle"
+
+2026-08-15 19:58:47,821 INFO Still failing for tradetracker.net: Page.goto: Navigation to "https://tradetracker.net/" is interrupted by another navigation to "https://skyscrapercity.com/"
+Call log:
+  - navigating to "https://tradetracker.net/", waiting until "networkidle"
+
+2026-08-15 19:59:15,162 INFO Fixed pcauto.com.cn -> MicrosoftYaHei | MicrosoftYaHei-Bold | -apple-system
+2026-08-15 19:59:23,170 INFO Fixed fontawesome.io -> cera-round-pro | Press Start | cera-pro
+2026-08-15 19:59:26,976 INFO Fixed nccu.edu.tw -> Arial |  | 
+2026-08-15 19:59:34,534 INFO Fixed 2checkout.com -> Verifone-Sans-Regular | Roboto | sans-serif
+2026-08-15 19:59:45,559 INFO Fixed ukcop26.org -> Bitter | Open Sans | SFMono-Regular
+2026-08-15 20:00:12,445 INFO Fixed marieclaire.co.uk -> Playfair Display | Archivo | Arial
+2026-08-15 20:00:13,991 INFO Fixed sinaimg.cn -> Times |  | 
+2026-08-15 20:15:04,055 ERROR Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+2026-08-15 20:15:04,056 ERROR Task was destroyed but it is pending!
+task: <Task cancelling name='Task-197' coro=<Browser.close() done, defined at /Users/tkmaher/Desktop/projects/freelance websites/fontdex/data/.venv/lib/python3.14/site-packages/playwright/_impl/_browser.py:235> wait_for=<Future finished result=None> cb=[SyncBase._sync.<locals>.<lambda>() at /Users/tkmaher/Desktop/projects/freelance websites/fontdex/data/.venv/lib/python3.14/site-packages/playwright/_impl/_sync_base.py:111]>
+2026-08-15 20:15:04,056 ERROR Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+2026-08-15 20:15:04,056 ERROR Task was destroyed but it is pending!
+task: <Task cancelling name='Task-196' coro=<Page.evaluate() done, defined at /Users/tkmaher/Desktop/projects/freelance websites/fontdex/data/.venv/lib/python3.14/site-packages/playwright/_impl/_page.py:471> wait_for=<Future finished result=None> cb=[SyncBase._sync.<locals>.<lambda>() at /Users/tkmaher/Desktop/projects/freelance websites/fontdex/data/.venv/lib/python3.14/site-packages/playwright/_impl/_sync_base.py:111]>
