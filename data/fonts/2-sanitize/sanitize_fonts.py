@@ -4,13 +4,13 @@ import csv
 import string
 import re
 
-SCRAPED_CSV = "fonts_scraped.csv"
+SCRAPED_CSV = "../1-scrape/fonts_scraped.csv"
 OUTPUT_CSV = "fonts_clean.csv"
 
 def open_csv_writer(path, fieldnames):
     """Open a CSV for incremental appends, writing the header only if new."""
     file_exists = os.path.exists(path) and os.path.getsize(path) > 0
-    f = open(path, "a", newline="", encoding="utf-8")
+    f = open(path, "w", newline="", encoding="utf-8")
     writer = csv.DictWriter(f, fieldnames=fieldnames, quoting=csv.QUOTE_MINIMAL)
     if not file_exists:
         writer.writeheader()
@@ -18,14 +18,14 @@ def open_csv_writer(path, fieldnames):
     return f, writer
 
 qualifiers = [
-    "light", "regular", "medium", "wide", "semibold", "bold", "extrabold", "black", "demibold", "extralight", "thin", "ultralight", "heavy", "book", "italic", "oblique", "condensed", "narrow", "tight", "free", "web", "semi"
+    "light", "regular", "medium", "wide", "semibold", "bold", "extrabold", "demibold", "extralight", "ultralight", "heavy", "book", "italic", "oblique", "condensed", "narrow", "tight", "free", "web", "semi", "variable"
 ]
 
 def sanitize(font):
     if (font is None) or (not isinstance(font, str)) or (font.strip() == ''):
         return ''
-    if 'icon' in font.lower() or 'px' in font.lower():
-        return '' # Ignore icon fonts or styles
+    if 'px' in font.lower() or 'unset' in font.lower():
+        return '' # Ignore styles
     if ';' in font or '/' in font or ':' in font or '(' in font or ')' in font or '<' in font or 'É' in font or 'é' in font:
         return '' # Ignore fonts with style-like chars
     font = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', font) # Add space before capital letters
@@ -33,7 +33,7 @@ def sanitize(font):
     font = font.replace('-', ' ') # Eliminate hyphens
     font = font.replace('\\', '') # Eliminate backslashes
     font = font.replace('"', '') # Eliminate quotes
-    font = string.capwords(font) # Capitalize each word
+    font = " ".join((word[0].upper() + word[1:] if len(word) > 0 else "") for word in font.split(" ")) # Capitalize each word
 
     for qualifier in qualifiers:
         pattern = r'\b' + re.escape(qualifier) + r'\b'
