@@ -84,6 +84,7 @@ import logging
 import os
 import re
 import socket
+import ssl
 import traceback
 from urllib.parse import urljoin
 
@@ -113,6 +114,43 @@ CLASSIFIED_CSV = "classified.csv"
 OUTPUT_CSV = "fonts_scraped.csv"
 ERROR_CSV = "fonts_scraped_error.csv"
 
+# Domains where the bare apex genuinely never serves a real page - it's
+# not a network/TLS problem, there is no content to fetch. No retry ladder
+# fixes this, so these are skipped immediately rather than wasting a
+# request + timeout on every single crawl attempt:
+#   - CDN/infra roots: real content lives at random-id.cloudfront.net etc,
+#     never at the bare "cloudfront.net" apex itself.
+#   - URL shorteners / redirect-only domains: they 400 on a bare request
+#     because they require a specific short-code path to route anywhere.
+#   - Hosting-platform roots (wixsite.com, etc): real sites live at
+#     <user>.wixsite.com, the bare root has nothing.
+#   - iframe-embed-only domains (youtube-nocookie.com): used as an iframe
+#     src for specific video paths, no general front page at the apex.
+# This list is inherently incomplete - add to it as you spot more
+# obviously-infrastructure domains showing up in the error CSV.
+SKIP_DOMAIN_PATTERNS = [
+    re.compile(p, re.IGNORECASE)
+    for p in [
+        r"^(www\.)?(cloudfront\.net|amazonaws\.com|googleusercontent\.com"
+        r"|akamaized\.net|akamaihd\.net|fastly\.net|azureedge\.net"
+        r"|edgekey\.net|edgesuite\.net|cloudflare\.net|herokuapp\.com)$",
+        r"^(www\.)?(goo\.gl|forms\.gle|maps\.app\.goo\.gl|bit\.ly"
+        r"|tinyurl\.com|t\.co|is\.gd|buff\.ly|ow\.ly|lnks\.gd|cvent\.me"
+        r"|subscribepage\.io|b23\.tv|rebrand\.ly|cutt\.ly)$",
+        r"^(www\.)?wixsite\.com$",
+        r"^(www\.)?youtube-nocookie\.com$",
+    ]
+]
+
+
+def skip_reason(domain):
+    """Returns a reason string if `domain` should be skipped without ever
+    attempting a request, or None if it should be crawled normally."""
+    for pattern in SKIP_DOMAIN_PATTERNS:
+        if pattern.match(domain):
+            return f"Skipped: known non-content/infrastructure domain ({domain})"
+    return None
+
 # A realistic browser header set. The bare User-Agent-only header set from
 # the original script is itself a bot-detection signal for many WAFs
 # (Cloudflare/Akamai etc.) - a fuller, ordinary-browser-shaped header set
@@ -131,26 +169,29 @@ HEADERS = {
 }
 
 # Transient network hiccups (DNS resolver hiccups, brief connect timeouts,
-# 502/503/504) are retried automatically at the transport layer before
+# 502/503/504/429) are retried automatically at the transport layer before
 # being counted as a real error - see the DNS-resolution-failure note in
-# already_processed_domains/get_session below.
+# already_processed_domains/get_session below. 429 is included because
+# requests/urllib3 honors a Retry-After header when present, so a genuine
+# rate limit gets a proper backoff instead of an immediate permanent error.
 RETRY_CONNECT = 2
 RETRY_READ = 1
 RETRY_BACKOFF = 1.5
-RETRY_STATUS_FORCELIST = (502, 503, 504)
+RETRY_STATUS_FORCELIST = (429, 502, 503, 504)
+
+# A hard cap on redirect hops. Without this, a misbehaving server/proxy that
+# rewrites the Location header incorrectly on each hop (seen in practice:
+# a URL that re-appended "www.lyon.fr" onto itself on every redirect until
+# it was tens of thousands of characters long before finally erroring) can
+# waste a huge amount of time and memory on a single domain before the
+# default 30-redirect ceiling kicks in.
+MAX_REDIRECTS = 5
 
 
 def get_session():
-    """A requests Session that retries transient connect/DNS/5xx failures.
-
-    Roughly a third of the errors seen on a 10k-domain crawl tend to be
-    NameResolutionError / ConnectTimeoutError hitting perfectly reachable,
-    legitimate domains - the local resolver or network hiccuping under
-    sustained request volume, not the site being down. Retrying those
-    (with backoff) at the transport layer turns most of them into
-    successes instead of permanent error rows.
-    """
+    """A requests Session that retries transient connect/DNS/5xx/429 failures."""
     session = requests.Session()
+    session.max_redirects = MAX_REDIRECTS
     retry = Retry(
         total=RETRY_CONNECT + RETRY_READ,
         connect=RETRY_CONNECT,
@@ -158,6 +199,7 @@ def get_session():
         status_forcelist=RETRY_STATUS_FORCELIST,
         backoff_factor=RETRY_BACKOFF,
         raise_on_status=False,
+        respect_retry_after_header=True,
     )
     adapter = HTTPAdapter(max_retries=retry)
     session.mount("https://", adapter)
@@ -174,6 +216,49 @@ SESSION = get_session()
 # certifi (and keeping the `certifi` package updated: `pip install -U
 # certifi`) clears most of those.
 VERIFY = certifi.where()
+
+
+class LegacyTLSAdapter(HTTPAdapter):
+    """An adapter that relaxes TLS negotiation for old/misconfigured servers.
+
+    A meaningful slice of SSL errors on a large, real-world domain list
+    aren't "the site is broken" - they're OpenSSL 3.x's stricter defaults
+    (SECLEVEL 2, no legacy renegotiation) refusing to talk to older servers
+    that still work fine in a normal browser. This is common on smaller
+    enterprise/government/legacy sites. This adapter lowers the security
+    level and allows legacy renegotiation, while still validating the
+    certificate against the same certifi bundle - it relaxes *cryptographic
+    compatibility*, not certificate trust.
+    """
+
+    def init_poolmanager(self, *args, **kwargs):
+        ctx = ssl.create_default_context(cafile=VERIFY)
+        ctx.set_ciphers("DEFAULT@SECLEVEL=1")
+        if hasattr(ssl, "OP_LEGACY_SERVER_CONNECT"):
+            ctx.options |= ssl.OP_LEGACY_SERVER_CONNECT
+        kwargs["ssl_context"] = ctx
+        return super().init_poolmanager(*args, **kwargs)
+
+
+def get_legacy_session():
+    session = requests.Session()
+    session.max_redirects = MAX_REDIRECTS
+    retry = Retry(
+        total=RETRY_CONNECT + RETRY_READ,
+        connect=RETRY_CONNECT,
+        read=RETRY_READ,
+        status_forcelist=RETRY_STATUS_FORCELIST,
+        backoff_factor=RETRY_BACKOFF,
+        raise_on_status=False,
+        respect_retry_after_header=True,
+    )
+    adapter = LegacyTLSAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
+LEGACY_SESSION = get_legacy_session()
 
 # "inherit" doesn't name a font at all, so it's the one value dropped
 # outright. System-font keywords (sans-serif, monospace, system-ui, ...)
@@ -213,18 +298,80 @@ def normalize(name):
     return name.strip().strip("'\"").strip()
 
 
-def get_all_styles(url):
-    """Fetches all inline/external/internal styles for a URL.
+def fetch_root_page(domain):
+    """Fetch a domain's root page, trying a couple of cheap fallbacks.
+
+    Returns (response, final_url, error). error is None on success.
+
+    Fallback ladder:
+      1. https://<domain> on the normal session.
+      2. If that failed with a connection-level error (DNS/connect
+         timeout/refused - NOT an HTTP error like 403/404, and NOT an SSL
+         error, which is handled separately below): retry once against
+         https://www.<domain>. Some domains only have DNS/vhost records
+         for the www subdomain, not the bare apex.
+      3. If either attempt failed with an SSLError: retry the *original*
+         URL once on the legacy-TLS session (relaxed cipher/negotiation
+         settings for old servers, still verifying certs against certifi -
+         see LegacyTLSAdapter). This is tried after the www attempt so a
+         www redirect target gets a chance first, but falls back to the
+         apex domain if www itself doesn't exist.
+    """
+    url = "https://" + domain
+    try:
+        response = SESSION.get(url, headers=HEADERS, timeout=10, verify=VERIFY)
+        response.raise_for_status()
+        return response, url, None
+    except requests.exceptions.SSLError as e:
+        first_error = str(e)
+        first_url = url
+    except requests.exceptions.ConnectionError as e:
+        # Not an SSLError (that's caught above first, since it's a more
+        # specific subclass) - DNS failure, connection refused, connect
+        # timeout, etc. Try the www. subdomain once before giving up.
+        if not domain.startswith("www."):
+            www_url = "https://www." + domain
+            try:
+                response = SESSION.get(
+                    www_url, headers=HEADERS, timeout=10, verify=VERIFY
+                )
+                response.raise_for_status()
+                return response, www_url, None
+            except requests.exceptions.SSLError as e2:
+                first_error = str(e2)
+                first_url = www_url
+            except requests.RequestException as e2:
+                return [], url, f"{e} (www. fallback also failed: {e2})"
+        else:
+            return [], url, str(e)
+    except requests.RequestException as e:
+        # HTTPError (403/404/etc.), Timeout, etc. - a real response came
+        # back or the failure isn't connection/SSL-shaped; no fallback
+        # ladder makes sense here.
+        return [], url, str(e)
+
+    # Reaching here means an SSLError happened somewhere above - retry
+    # that same URL once with relaxed legacy-TLS negotiation.
+    try:
+        response = LEGACY_SESSION.get(
+            first_url, headers=HEADERS, timeout=10, verify=VERIFY
+        )
+        response.raise_for_status()
+        return response, first_url, None
+    except requests.RequestException as e2:
+        return [], url, f"{first_error} (legacy-TLS fallback also failed: {e2})"
+
+
+def get_all_styles(domain):
+    """Fetches all inline/external/internal styles for a domain.
 
     Returns (styles, error). `error` is None on success (even if 0 styles
     were found), or a short string describing why the page couldn't be
     fetched/parsed at all.
     """
-    try:
-        response = SESSION.get(url, headers=HEADERS, timeout=10, verify=VERIFY)
-        response.raise_for_status()
-    except requests.RequestException as e:
-        return [], str(e)
+    response, url, error = fetch_root_page(domain)
+    if error is not None:
+        return [], error
 
     try:
         soup = BeautifulSoup(response.text, "html.parser")
@@ -393,9 +540,19 @@ def main():
             if not domain or domain in done:
                 continue
 
+            reason = skip_reason(domain)
+            if reason is not None:
+                error_writer.writerow(
+                    {"domain": domain, "category": category, "error": reason}
+                )
+                error_file.flush()
+                os.fsync(error_file.fileno())
+                done.add(domain)
+                processed_count += 1
+                continue
+
             try:
-                url = "https://" + domain
-                styles, error = get_all_styles(url)
+                styles, error = get_all_styles(domain)
 
                 if error is not None:
                     error_writer.writerow(
