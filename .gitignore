@@ -1,9 +1,8 @@
 /node_modules
 google_fonts.txt
 /data/categories/top10k_build
-*.csv
 /data/top10000_categorized.csv
 /fonts-index-api/package.json
 /fonts-index-api/package-lock.json
 /fonts-index-api/worker-configuration.d.ts
-/fonts-index-api/vite.config.ts
+*.csv
