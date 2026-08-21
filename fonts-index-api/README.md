@@ -1,6 +1,7 @@
-# vinext app
+## Deploy
 
-This project was created with create-vinext-app.
+- `npx wrangler d1 execute fonts-index --remote --file=../data/fonts/4-final/fonts_classified_out.sql`
+- `npx wrangler d1 execute fonts-index --remote --file=../data/fonts/4-final/websites_clean_out.sql`
 
 ## Scripts
 
