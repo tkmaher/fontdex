@@ -8,7 +8,6 @@ import { NetworkError, HttpError } from "@/types/error";
 const FONT_API_URL = "https://fonts-index-api.tomaszkkmaher.workers.dev/api/fonts";
  
 const fetchFontsEffect = (filter: FontFilter) => Effect.gen(function* () {
-
   const url = new URL(FONT_API_URL);
   filter.searchString && url.searchParams.set("searchString", filter.searchString);
   filter.classification && url.searchParams.set("classification", filter.classification);
@@ -22,6 +21,7 @@ const fetchFontsEffect = (filter: FontFilter) => Effect.gen(function* () {
   url.searchParams.set("subsetOr", String(filter.subsetOr).toLowerCase());
   url.searchParams.set("sortBy", String(filter.sortBy));
   url.searchParams.set("page", String(filter.page));
+  filter.bubbleSort && url.searchParams.set("bubbleSort", String(filter.bubbleSort));
 
   const response = yield* Effect.tryPromise({
     try: (signal) => fetch(url, { signal }),
@@ -35,17 +35,21 @@ const fetchFontsEffect = (filter: FontFilter) => Effect.gen(function* () {
     });
   }
 
+
   const json = yield* Effect.tryPromise({
     try: () => response.json() as Promise<unknown>,
     catch: (cause) => new NetworkError({ cause }),
   });
+    
+  const tagged = {
+    ...(json as Record<string, unknown>),
+    _tag: filter.bubbleSort ? "BubbleFontResult" : "RowFontResult",
+  };
+  
+  return yield* Schema.decodeUnknown(FontResult)(tagged).pipe(
+    Effect.mapError((cause) => new Error(`Failed to decode response: ${String(cause)}`)),
+  );
 
-  console.log("Fetched JSON:", json);
-
-  return yield* Effect.try({
-    try: () => Schema.decodeUnknownEither(FontResult)(json),
-    catch: (cause) => new Error(`Failed to decode response: ${cause}`),
-  });
 }).pipe(
   Effect.timeout(Duration.seconds(8)),
   Effect.retry({

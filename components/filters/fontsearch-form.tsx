@@ -1,14 +1,17 @@
 "use client";
 
-import { useFontSearch } from "./fetch-fonts";
+import { useFontSearch } from "@/components/effects/fetch-fonts";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Schema } from "effect";
 import { ArrayFormatter } from "effect/ParseResult";
-import { FontFilter, type FontRow } from "@/types/schema";
- 
+import { BubbleFontResult, FontFilter } from "@/types/schema";
 
-export default function UserSearchForm() {
+type FontSearchFormProps = {
+  onBubbleResult?: (result: BubbleFontResult) => void;
+};
+
+export default function FontSearchForm({ onBubbleResult }: FontSearchFormProps) {
   const [ searchString, setSearchString ] = useState<string>("");
   const [ classification, setClassification ] = useState<string>("");
   const [ styles, setStyles ] = useState<string[]>([]);
@@ -17,6 +20,7 @@ export default function UserSearchForm() {
   const [ subsetOr, setSubsetOr ] = useState<boolean>(false);
   const [ sortBy, setSortBy ] = useState<"popHL" | "popLH" | "fontAZ" | "fontZA">("popHL");
   const [ page, setPage ] = useState<number>(1);
+  const [ bubbleSort, setBubbleSort ] = useState<"classification" | "style_tags" | "subsets" | null>("classification"); // TODO: change back
 
   const [formError, setFormError] = useState<string | null>(null);
   const [params, setParams] = useState<FontFilter | null>(null);
@@ -33,6 +37,7 @@ export default function UserSearchForm() {
       subsetOr,
       sortBy,
       page,
+      bubbleSort
     });
 
     if (result._tag === "Left") {
@@ -51,6 +56,12 @@ export default function UserSearchForm() {
     isFetching, 
     refetch 
   } = useFontSearch(params); 
+
+  useEffect(() => {
+    if (results?._tag === "BubbleFontResult") {
+      onBubbleResult?.(results);
+    }
+  }, [results, onBubbleResult]);
 
   console.log("Results:", results);
   return (
@@ -75,20 +86,6 @@ export default function UserSearchForm() {
         </div>
       )}
 
-      {results?._tag === "Left" && (
-  <pre>{JSON.stringify(ArrayFormatter.formatErrorSync(results.left), null, 2)}</pre>
-)}
-
-      {results?._tag == "Right" && (
-        <ul>
-          {results.right.data.map((result: FontRow) => (
-            <li key={result.font}>
-              <p>{result.font}</p>
-              <p>{result.hits}</p>
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
   );
 }

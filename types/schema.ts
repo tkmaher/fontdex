@@ -1,4 +1,4 @@
-import { Schema } from "effect";
+import { Schema, Match } from "effect";
 
 export const FontFilter = Schema.Struct({
   searchString: Schema.optional(Schema.String),
@@ -9,6 +9,7 @@ export const FontFilter = Schema.Struct({
   subsetOr: Schema.Boolean,
   sortBy: Schema.String,
   page: Schema.Number,
+  bubbleSort: Schema.optional(Schema.String),
 });
 export type FontFilter = Schema.Schema.Type<typeof FontFilter>;
 
@@ -24,8 +25,25 @@ export const FontRow = Schema.Struct({
 });
 export type FontRow = Schema.Schema.Type<typeof FontRow>;
 
-export const FontResult = Schema.Struct ({
+export const RowFontResult = Schema.Struct ({
   data: Schema.Array(FontRow),
   rows: Schema.Number,
   pages: Schema.Number,
+  _tag: Schema.Literal("RowFontResult"),
 });
+
+export const NodeData = Schema.Struct({
+  label: Schema.String,
+  count: Schema.Number,
+});
+
+export const BubbleFontResult = Schema.Struct ({
+  data: Schema.Array(NodeData),
+  _tag: Schema.Literal("BubbleFontResult"),
+
+});
+export type BubbleFontResult = Schema.Schema.Type<typeof BubbleFontResult>;
+
+
+export const FontResult = Schema.Union(RowFontResult, BubbleFontResult);
+export type FontResult = Schema.Schema.Type<typeof FontResult>;
