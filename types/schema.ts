@@ -3,13 +3,14 @@ import { Schema, Match } from "effect";
 export const FontFilter = Schema.Struct({
   searchString: Schema.optional(Schema.String),
   classification: Schema.optional(Schema.String),
-  styles: Schema.Array(Schema.String),
-  subsets: Schema.Array(Schema.String),
-  styleOr: Schema.Boolean,
-  subsetOr: Schema.Boolean,
-  sortBy: Schema.String,
+  styles: Schema.optional(Schema.Array(Schema.String)),
+  subsets: Schema.optional(Schema.Array(Schema.String)),
+  styleOr: Schema.optional(Schema.Boolean),
+  subsetOr: Schema.optional(Schema.Boolean),
+  sortBy: Schema.optional(Schema.String),
   page: Schema.Number,
   bubbleSort: Schema.optional(Schema.String),
+  searchField: Schema.optional(Schema.String),
 });
 export type FontFilter = Schema.Schema.Type<typeof FontFilter>;
 

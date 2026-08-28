@@ -21,7 +21,7 @@ const PALETTE = [
   '#F7F7F7',
   '#9EE37D',
   '#FF5154',
-  '#58315A'
+  '#b97abc'
 ];
 
 function colorForIndex(i: number): string {
@@ -82,13 +82,13 @@ export default function CytoscapeGraph({ fontdata }: CytoscapeGraphProps) {
               'text-valign': 'center',
               'text-halign': 'center' as 'center',
               color: '#171717',
-              'font-size': `mapData(count, ${minCount}, ${maxCount}, 0.1, 30)`,
-              'text-max-zoom': 1.5,
+              'font-size': `mapData(count, ${minCount}, ${maxCount}, 5, 30)`,
               width: `mapData(count, ${minCount}, ${maxCount}, 1, 500)`,
               height: `mapData(count, ${minCount}, ${maxCount}, 1, 500)`,
               'overlay-opacity': 0,
               'transition-property': 'opacity, background-opacity',
               'transition-duration': '0.1s',
+              'font-family': 'CommitMono, monospace',
             },
           },
           {
@@ -103,6 +103,7 @@ export default function CytoscapeGraph({ fontdata }: CytoscapeGraphProps) {
             selector: 'node.hover',
             style: {
               'background-opacity': 0.5,
+              'cursor': 'pointer',
             },
           },
         ],
@@ -134,6 +135,7 @@ export default function CytoscapeGraph({ fontdata }: CytoscapeGraphProps) {
         cy.on('mouseout', 'node', (evt) => {
           evt.target.removeClass('hover');
         });
+
 
         // Empty effect - fill in whatever should happen on node click.
         cy.on('tap', 'node', (evt) => {
@@ -200,7 +202,7 @@ export default function CytoscapeGraph({ fontdata }: CytoscapeGraphProps) {
   return (
     <div
       ref={containerRef}
-      style={{ width: '100%', height: '500px', border: '1px solid #eaeaea' }}
+      className='graph-container'
     />
   );
 }

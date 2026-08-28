@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.scss";
+import "@/app/styles/globals.scss";
 
 export const metadata: Metadata = {
   title: "Fonts Index",

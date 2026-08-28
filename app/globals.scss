@@ -1,9 +1,0 @@
-@use 'variables' as v;
-@import '@fontsource/commit-mono';
-
-
-body {
-  background: v.$background;
-  color: v.$copy;
-  font-family: 'Commit Mono', monospace;
-}

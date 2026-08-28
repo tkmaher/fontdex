@@ -1,0 +1,188 @@
+@use 'variables' as v;
+@import '@fontsource/commit-mono';
+
+.dropdown-header {
+    display: flex;
+    flex-direction: row;
+    gap: 1px;
+}
+
+.img-btn {
+    width: 16px;
+    height: 16px;
+    
+}
+
+.dropdown {
+    min-width: 10em;
+    font-size: 12px;
+    border: none;
+    min-height: 16px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-family: 'Commit Mono', monospace;
+    background-color: v.$highlight !important;
+
+    .dropdown-header {
+        justify-content: space-between;
+        gap: 0;
+        > :first-child {
+            flex-grow: 1;
+            text-align: left;
+            border-right: none;
+        }
+    }
+
+    cursor: pointer;
+
+    .dropdown-content {
+        display: flex;
+        flex-direction: column;
+        z-index: 100;
+        position: relative;
+        max-height: 20em;
+        overflow-y: auto;
+        > * {
+            margin: 1px;
+            text-align: left;
+        }
+        > :first-child {
+            margin-top: 0;
+        }
+        button + button {
+            margin-top: 0;
+        }
+    }
+
+}
+
+button {
+    font-size: 12px;
+    border: none;
+    height: 16px;
+    color: v.$copy;
+    font-family: 'Commit Mono', monospace;
+    margin: 0;
+    padding: 0;
+
+    cursor: pointer;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: v.$hover1;
+        }
+    }
+    &:active {
+        background-color: v.$active1;
+    }
+}
+
+.button-rev {
+    background-color: v.$hover1;
+    @media (hover: hover) {
+        &:hover {
+            background-color: v.$hover3;
+        }
+    }
+    &:active {
+        background-color: v.$active1;
+    }
+}
+
+.button-img {
+    @media (hover: hover) {
+        &:hover {
+            background-color: v.$hover2;
+        }
+    }
+    &:active {
+        background-color: v.$active2;
+    }
+}
+
+.button-not {
+    @media (hover: hover) {
+        &:hover {
+            background-color: v.$hover3;
+        }
+    }
+    &:active {
+        background-color: v.$active3;
+    }
+}
+
+.button-img-rev {
+    background-color: v.$hover2;
+    @media (hover: hover) {
+        &:hover {
+            background-color: v.$hover1;
+        }
+    }
+    &:active {
+        background-color: v.$active2;
+    }
+}
+
+.button-not-rev {
+    background-color: v.$hover3;
+    @media (hover: hover) {
+        &:hover {
+            background-color: v.$hover2;
+        }
+
+    }
+    &:active {
+        background-color: v.$active3;
+    }
+}
+
+input[type=text] {
+    height: 14px;
+    background: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid v.$highlight;
+    width: 10em;
+    font-size: 12px;
+    font-family: 'Commit Mono', monospace;
+    @media (hover: hover) {
+        &:hover {
+            background-color: v.$hover1;
+        }
+
+    }
+    &:active {
+        background-color: v.$hover3;
+    }
+
+    &:focus {
+        outline: none;
+        background-color: v.$active2;
+    }
+}
+
+.search-row {
+    display: flex;
+    flex-wrap: row;
+    gap: 1px;
+    label {
+        height: fit-content;
+    }
+    input {
+        flex-grow: 1;
+    }
+}
+
+.search-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.toggle-row {
+    display: flex;
+    flex-direction: row;
+    
+}

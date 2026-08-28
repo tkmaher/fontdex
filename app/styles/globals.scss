@@ -1,0 +1,82 @@
+@use 'variables' as v;
+@import '@fontsource/commit-mono';
+
+
+body {
+  background: v.$background;
+  color: v.$copy;
+  font-family: 'Commit Mono', monospace;
+  font-feature-settings: "kern";
+  font-kerning: normal;
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.graph-container {
+  width: 100dvw;
+  height: 100dvh;
+  position: absolute;
+  z-index: 0;
+}
+
+.ui-overlay {
+  position: relative;
+  z-index: 10;
+}
+
+.col-stack {
+  display: flex;
+  flex-direction: column;
+  padding: 0.6em;
+  height: calc(100dvh - 1.2em);
+  gap: 3em;
+}
+
+.text {
+  background-color: v.$highlight;
+  width: fit-content;
+  border: 1px solid v.$highlight;
+}
+
+.rounder {
+  border-radius: 2px;
+}
+
+.row-stack {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+
+}
+
+.header-row {
+  display: flex;
+  font-size: 14px;
+  justify-content: space-between;
+  gap: 4px;
+  .char-span-title {
+    user-select: none;
+    
+  }
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.right-stack {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow-y: auto;
+  }
+  max-width: 50em;
+  max-height: 100%;
+}

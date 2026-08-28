@@ -11,10 +11,10 @@ const fetchFontsEffect = (filter: FontFilter) => Effect.gen(function* () {
   const url = new URL(FONT_API_URL);
   filter.searchString && url.searchParams.set("searchString", filter.searchString);
   filter.classification && url.searchParams.set("classification", filter.classification);
-  filter.styles.forEach((style: string) =>
+  filter.styles && filter.styles.forEach((style: string) =>
     url.searchParams.append("style", style)
   );
-  filter.subsets.forEach((subset: string) =>
+  filter.subsets && filter.subsets.forEach((subset: string) =>
     url.searchParams.append("subset", subset)
   );
   url.searchParams.set("styleOr", String(filter.styleOr).toLowerCase());
@@ -22,6 +22,8 @@ const fetchFontsEffect = (filter: FontFilter) => Effect.gen(function* () {
   url.searchParams.set("sortBy", String(filter.sortBy));
   url.searchParams.set("page", String(filter.page));
   filter.bubbleSort && url.searchParams.set("bubbleSort", String(filter.bubbleSort));
+  url.searchParams.set("searchField", String(filter.searchField ?? "td"));
+
 
   const response = yield* Effect.tryPromise({
     try: (signal) => fetch(url, { signal }),
@@ -45,6 +47,8 @@ const fetchFontsEffect = (filter: FontFilter) => Effect.gen(function* () {
     ...(json as Record<string, unknown>),
     _tag: filter.bubbleSort ? "BubbleFontResult" : "RowFontResult",
   };
+
+  console.log("returned:", json);
   
   return yield* Schema.decodeUnknown(FontResult)(tagged).pipe(
     Effect.mapError((cause) => new Error(`Failed to decode response: ${String(cause)}`)),
