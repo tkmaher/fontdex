@@ -5,22 +5,32 @@
     display: flex;
     flex-direction: row;
     gap: 1px;
+    width: 100%;
 }
 
 .img-btn {
+    display: flex;
+    flex-shrink: 0;
     width: 16px;
     height: 16px;
-    
+    line-height: 16px;
+    align-items: center;
+    justify-content: center;
+    img {
+        max-width: 14px;
+        max-height: 14px;
+    }
 }
 
 .dropdown {
-    min-width: 10em;
+    width: 100%;
     font-size: 12px;
     border: none;
     min-height: 16px;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    min-width: 5em;
     font-family: 'Commit Mono', monospace;
     background-color: v.$highlight !important;
 
@@ -28,9 +38,18 @@
         justify-content: space-between;
         gap: 0;
         > :first-child {
+            
             flex-grow: 1;
             text-align: left;
             border-right: none;
+            
+
+        }
+    }
+
+    .dropdown-header-open {
+        > * {
+            border: 1px dashed v.$highlight;
         }
     }
 
@@ -44,14 +63,17 @@
         max-height: 20em;
         overflow-y: auto;
         > * {
-            margin: 1px;
+            border: 1px solid v.$highlight;
             text-align: left;
+
+            text-wrap: nowrap;
+            word-wrap: break-word;
         }
         > :first-child {
-            margin-top: 0;
+            border-top: 0;
         }
         button + button {
-            margin-top: 0;
+            border-top: 0;
         }
     }
 
@@ -71,10 +93,12 @@ button {
     @media (hover: hover) {
         &:hover {
             background-color: v.$hover1;
+            border: 1px dashed v.$highlight;
         }
     }
     &:active {
         background-color: v.$active1;
+        border: 1px dashed v.$highlight;
     }
 }
 
@@ -144,45 +168,69 @@ input[type=text] {
     margin: 0;
     padding: 0;
     border: 1px solid v.$highlight;
-    width: 10em;
+    min-width: 15em;
     font-size: 12px;
     font-family: 'Commit Mono', monospace;
     @media (hover: hover) {
         &:hover {
             background-color: v.$hover1;
+            border: 1px dashed v.$highlight;
         }
 
     }
     &:active {
         background-color: v.$hover3;
+        border: 1px dashed v.$highlight;
     }
 
     &:focus {
         outline: none;
         background-color: v.$active2;
+        border: 1px dashed v.$highlight;
     }
 }
 
 .search-row {
     display: flex;
-    flex-wrap: row;
     gap: 1px;
     label {
         height: fit-content;
     }
-    input {
-        flex-grow: 1;
-    }
+
 }
 
 .search-col {
     display: flex;
     flex-direction: column;
     gap: 1px;
+    width: 100%;
+    & > :first-child {
+        flex-grow: 1;
+        width: 100%;
+    }
 }
 
 .toggle-row {
     display: flex;
     flex-direction: row;
+    button {
+        border: 1px solid v.$highlight;
+    }
+    button + button {
+        border-left: none;
+    }
+
     
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-shrink: 0;
+    padding-right: 1px;
+}
+
+.submit {
+    width: 100%;
 }

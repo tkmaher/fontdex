@@ -13,12 +13,11 @@ export default function Home() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {bubbleResult?._tag == "BubbleFontResult" && <CytoscapeGraph fontdata={bubbleResult} />}
       <div className="ui-overlay">
         <div className="col-stack">
           <Header/>
           <div className="row-stack">
-            <FontSearchForm onBubbleResult={setBubbleResult} />
+            <FontSearchForm />
           </div>
           <Footer/>
         </div>

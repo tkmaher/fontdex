@@ -10,9 +10,9 @@ export default function Toggle({
     str2: string
 }) {
     return (
-        <div className="text toggle-row" onClick={() => setterCallback(!value)}>
-            <button type="button" className={!value ? 'button-img-rev' : undefined}>{str1}</button>
-            <button type="button" className={value ? 'button-img-rev' : undefined}>{str2}</button>
+        <div className="toggle-row" onClick={() => setterCallback(!value)}>
+            <button type="button" className={value ? 'button-not-rev' : undefined}>{str1}</button>
+            <button type="button" className={!value ? 'button-not-rev' : undefined}>{str2}</button>
         </div>
     );
 }

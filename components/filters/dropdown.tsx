@@ -1,24 +1,43 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 let idCounter = 0;
 
 export function DropdownAggregate({
     title,
     options,
+    value,
     setterCallback,
     removeNegate,
     removeRemove
 }: {
     title: string,
     options: string[],
+    value: string[],
     setterCallback: (value: string[]) => void,
     removeNegate?: boolean,
     removeRemove?: boolean
 }) {
-    const [rows, setRows] = useState<{ id: number; value: string }[]>([
-        { id: idCounter++, value: "" }
-    ]);
+    const [rows, setRows] = useState<{ id: number; value: string }[]>(
+        value.length > 0
+            ? value.map(v => ({ id: idCounter++, value: v }))
+            : [{ id: idCounter++, value: "" }]
+    );
+
+    // Re-sync when the value changes from outside (e.g. a tag click resetting the filter).
+    useEffect(() => {
+        const current = rows.map(r => r.value).filter(v => v !== "");
+        const inSync =
+            current.length === value.length && current.every((v, i) => v === value[i]);
+        if (!inSync) {
+            setRows(
+                value.length > 0
+                    ? value.map(v => ({ id: idCounter++, value: v }))
+                    : [{ id: idCounter++, value: "" }]
+            );
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value]);
 
     const emit = (updatedRows: { id: number; value: string }[]) => {
         setterCallback(updatedRows.map(r => r.value).filter(v => v !== ""));
@@ -74,11 +93,11 @@ export function Dropdown({
     removeRemove?: boolean,
     addRow?: () => void
 }) {
-    const [open, setOpen] = useState(false);
+    const [ open, setOpen ] = useState(false);
 
     const negate = value && value.startsWith("!");
     const selected = negate ? value.slice(1) : value;
-    const [ label, setLabel ] = useState(selected || title);
+    const label = selected || title;
 
     return (
         <div className="dropdown-header">
@@ -95,7 +114,7 @@ export function Dropdown({
                 </button>
             )}
             <div className="dropdown text" onClick={() => setOpen(!open)}>
-                <div className="dropdown-header">
+                <div className={`${open ? 'dropdown-header dropdown-header-open' : 'dropdown-header'}`}>
                     <button className="text" type="button">{label}</button>
                     <button
                         className={`text ${open ? 'button-img-rev' : 'button-img'}`}
@@ -117,7 +136,6 @@ export function Dropdown({
                                 onClick={() => {
                                     setterCallback(negate ? '!' + option : option);
                                     setOpen(false);
-                                    setLabel(option);
                                 }}
                                 className={option === selected ? 'button-not-rev' : ''}
                             >
@@ -127,14 +145,11 @@ export function Dropdown({
                     </div>
                 )}
             </div>
-            {label !== title && !removeRemove && (
+            {selected && !removeRemove && (
                 <button
                     type="button"
                     className="text button-not img-btn"
-                    onClick={() => {
-                        setterCallback('');
-                        setLabel(title);
-                    }}
+                    onClick={() => setterCallback('')}
                 >
                     ×
                 </button>

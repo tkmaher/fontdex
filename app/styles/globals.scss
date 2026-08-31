@@ -14,32 +14,40 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  height: 100dvh;
 }
 
 .graph-container {
-  width: 100dvw;
-  height: 100dvh;
-  position: absolute;
+  width: 100%;
+  height: calc(100% - 2px);
   z-index: 0;
+  overflow: hidden;
+  border: 1px solid v.$highlight;
 }
 
 .ui-overlay {
   position: relative;
   z-index: 10;
+  pointer-events: none;
 }
 
 .col-stack {
   display: flex;
   flex-direction: column;
-  padding: 0.6em;
-  height: calc(100dvh - 1.2em);
-  gap: 3em;
+  padding: 1px;
+  height: calc(100dvh - 2px);
+  gap: 1px;
+  & > * {
+    pointer-events: all !important;
+  }
 }
 
 .text {
   background-color: v.$highlight;
   width: fit-content;
   border: 1px solid v.$highlight;
+  user-select: none;
+  min-height: 14px;
 }
 
 .rounder {
@@ -50,33 +58,54 @@ body {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
-
+  overflow-y: auto;
+  width: 100%;
+  gap: 1px;
+  justify-content: space-between;
 }
 
 .header-row {
   display: flex;
-  font-size: 14px;
   justify-content: space-between;
-  gap: 4px;
+  gap: 1px;
+
   .char-span-title {
-    user-select: none;
-    
+
+    transition: padding-right 0.5s ease-in-out;
   }
 }
 
 .footer-row {
   display: flex;
   justify-content: space-between;
-  gap: 4px;
+  gap: 1px;
 }
 
 .right-stack {
+  width: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   form {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 1px;
     overflow-y: auto;
   }
-  max-width: 50em;
-  max-height: 100%;
+  > .search-col {
+    flex-shrink: 0;
+  }
+
 }
+
+.left-container {
+  height: 100%;
+  display: flex;
+  gap: 1px;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+

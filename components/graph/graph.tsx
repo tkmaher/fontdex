@@ -177,6 +177,7 @@ export default function CytoscapeGraph({ fontdata }: CytoscapeGraphProps) {
           .style({
             width: `mapData(count, ${minCount}, ${maxCount}, 30, 150)`,
             height: `mapData(count, ${minCount}, ${maxCount}, 30, 150)`,
+            backgroundColor: `#FFFFF`
           })
           .update();
         cy.endBatch();

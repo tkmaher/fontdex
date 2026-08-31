@@ -1,0 +1,132 @@
+@use "variables" as v;
+
+:root {
+    --block-var: 6;
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --block-var: 5;
+    }
+}
+
+@media (max-width: 800px) {
+    :root {
+        --block-var: 4;
+    }
+}
+
+.left-split {
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+}
+  
+.left-stack {
+    width: v.$left-width;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1px;
+
+    .boxes {
+        overflow-y: auto;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1px;
+    }
+}
+
+.display-screen {
+    width: calc((v.$left-width / (var(--block-var)) * 2));
+    flex-shrink: 0;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    .pagination {
+        width: 100% !important;
+    }
+}
+
+.left-split-small {
+    width: calc((v.$left-width / (var(--block-var)) * calc(var(--block-var) - 2)));
+}
+
+.font-block {
+    width: calc(v.$left-width / var(--block-var) - 1px);
+    height: calc(v.$left-width / var(--block-var) - 1px);
+    display: inline-block;
+    background-color: transparent;
+
+    button {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+}
+
+.font-inspector {
+    aspect-ratio: 1;
+    width: 100%;
+    user-select: all !important;
+    -webkit-user-select: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow-x: hidden;
+    flex-shrink: 0;
+    .tag-map {
+        display: flex;
+        flex-wrap: wrap;
+        justify-self: flex-end;
+        background-color: v.$highlight;
+        gap: 1px;
+        padding: 1px;
+        button {
+            border: none !important;
+                }
+    }
+    .inspector-title {
+        font-size: 18px;
+        font-style: italic;
+        position: sticky;
+        top: 0;
+        background-color: v.$highlight;
+        z-index: 10;
+        width: 100%;
+        height: 20px;
+        flex-shrink: 0;
+    }
+    .inspector-desc {
+        flex-grow: 1;
+        text-indent: 1em;
+        width: 100%;
+    }
+
+    .inspector-sub {
+        opacity: 0.5;
+        width: 100%;
+    }
+
+    overflow-y: auto;
+}
+
+.inspector-sites {
+    max-height: 100%;
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    gap: 1px;
+    flex-direction: column;
+    .text {
+        width: 100%;
+        text-align: left;
+    }
+}

@@ -1,4 +1,4 @@
-import { Schema, Match } from "effect";
+import { Schema } from "effect";
 
 export const FontFilter = Schema.Struct({
   searchString: Schema.optional(Schema.String),
@@ -23,6 +23,7 @@ export const FontRow = Schema.Struct({
   notes: Schema.NullOr(Schema.String),
   confidence: Schema.NullOr(Schema.String),
   hits: Schema.Number,
+  _tag: Schema.Literal("FontRow")
 });
 export type FontRow = Schema.Schema.Type<typeof FontRow>;
 
@@ -45,6 +46,30 @@ export const BubbleFontResult = Schema.Struct ({
 });
 export type BubbleFontResult = Schema.Schema.Type<typeof BubbleFontResult>;
 
-
 export const FontResult = Schema.Union(RowFontResult, BubbleFontResult);
 export type FontResult = Schema.Schema.Type<typeof FontResult>;
+
+export const SiteFilter = Schema.Struct({
+  font: Schema.String,
+  page: Schema.Number,
+});
+export type SiteFilter = Schema.Schema.Type<typeof SiteFilter>;
+
+export const SiteRow = Schema.Struct({
+  domain: Schema.String,
+  category: Schema.NullOr(Schema.String),
+  font1: Schema.NullOr(Schema.String),
+  font2: Schema.NullOr(Schema.String),
+  font3: Schema.NullOr(Schema.String),
+  rank: Schema.Number,
+  _tag: Schema.Literal("SiteRow")
+});
+export type SiteRow = Schema.Schema.Type<typeof SiteRow>;
+
+export const SiteResult = Schema.Struct({
+  data: Schema.Array(SiteRow),
+  rows: Schema.Number,
+  pages: Schema.Number,
+  _tag: Schema.Literal("SiteResult")
+});
+export type SiteResult = Schema.Schema.Type<typeof SiteResult>;

@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 export function Header() {
     // TODO: animation for title
     const header = "Fonts-Index";
-    const a = 20;
+    const a = 2;
     const p = 500;
     const [ count, setCount ] = useState(0);
     const [ bigCount, setBigCount ] = useState(0);
+    const [ activated, setActivated ] = useState(false);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -21,23 +22,28 @@ export function Header() {
 
     return (
         <div className="header-row">
-            <div className="text">
-                {[...header].map((char, index) => (
-                    <span 
-                        className="char-span-title"
-                        key={index}
-                        style={{
-                            fontStyle: ((bigCount + index) % 4 == 0) ? "italic" : undefined,
-                            fontWeight: ((bigCount + index) % 5 == 0) ? "bold" : ((bigCount + index) % 3 == 0) ? "bolder" : undefined,
-                            paddingRight: 
-                                index != header.length - 1 ?
-                                `${3 + 4 * a / p * Math.abs(((((count + index + char.charCodeAt(0)) - p / 4) % p) + p) % p - p / 2)}px`
-                                : undefined
-                        }}
-                    >
-                        {char}
-                    </span>
-                ))}
+            <div className="header-row">
+                <button type="button" className={`text img-btn ${activated && 'button-rev'}`} onClick={() => setActivated(!activated)}>
+                    {activated ? '⏸' : '▶'}
+                </button>
+                <div className="text">
+                    {[...header].map((char, index) => (
+                        <span 
+                            className="char-span-title"
+                            key={index}
+                            style={{
+                                fontStyle: activated ? ((bigCount + index) % 4 == 0) ? "italic" : undefined : undefined,
+                                fontWeight: activated ? ((bigCount + index) % 5 == 0) ? "bold" : ((bigCount + index) % 3 == 0) ? "bolder" : undefined : undefined,
+                                paddingRight: 
+                                    activated ? index != header.length - 1 ?
+                                    `${ 4 * a / p * Math.abs(((((count + index + char.charCodeAt(0)) - p / 4) % p) + p) % p - p / 2)}px`
+                                    : undefined : undefined
+                            }}
+                        >
+                            {char}
+                        </span>
+                    ))}
+                </div>
             </div>
             <div className="header-row">
                 <div className="text">
