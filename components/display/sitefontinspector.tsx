@@ -1,35 +1,55 @@
 "use client";
 import { FontRow, SiteFilter, SiteRow } from "@/types/schema";
 import { useSiteSearch } from "../effects/fetch-font-sites";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Pagination from "@/components/display/pagination";
+import { useFontLookup } from "../effects/fetch-font";
 
 function SiteInspector({
     site, 
-    catCallback
+    catCallback,
+    navCallback
 }: {
     site: SiteRow, 
-    catCallback: (category: string) => void
+    catCallback: (category: string) => void,
+    navCallback: (item: FontRow | SiteRow) => void
 }) {
 
     const fonts = [site.font1, site.font2, site.font3]
 
+    const fontRows: (FontRow | null)[] = fonts.map(font => {
+        const { data: fontData } = useFontLookup(font ?? "");
+        if (!fontData) return null;
+        return fontData;
+    });
+
     return (
         <>
             <div className="font-inspector">
-                <div className="inspector-title text">{site.domain}</div>
+                <div className="inspector-title">
+                    <div className="text">
+                        {site.domain}
+                    </div>
+                    <button 
+                        type="button" 
+                        className="img-btn text"
+                        onClick={() => window.open(`https://${site.domain}`, '_blank')}
+                    >
+                        <img src="link.svg"/>
+                    </button>
+                </div>
                 <div className="inspector-desc text">#{site.rank} - {site.category}</div>
                 <div className="inspector-sub text">Fonts</div>
             </div>
             <div className="inspector-sites">
-                {fonts.map((font, i) => (
-                    font && <div className="search-row" key={i}>
+                {fontRows.map((fontRow, i) => (
+                    fontRow && <div className="search-row" key={i}>
                         <button 
                             className="text" 
-                            key={font ?? i}
-                            onClick={() => window.open(`https://${site.domain}`, '_blank')}
+                            key={fontRow.font ?? i}
+                            onClick={() => navCallback(fontRow)}
                         >
-                            {font}
+                            {fontRow.font}
                         </button>
                         
                     </div>
@@ -46,7 +66,15 @@ export interface TagType {
     type: TagSplit
 }
 
-function FontInspector({row, tagCallback}: {row: FontRow, tagCallback: (data: TagType) => void}) {
+function FontInspector({
+    row, 
+    tagCallback,
+    navCallback
+}: {
+    row: FontRow, 
+    tagCallback: (data: TagType) => void,
+    navCallback: (item: FontRow | SiteRow) => void
+}) {
 
     const [ pageIn, setPageIn ] = useState<number>(1);
     const [ siteParams, setSiteParams ] = useState<SiteFilter | null>({ font: row.font, page: 1 });
@@ -70,7 +98,6 @@ function FontInspector({row, tagCallback}: {row: FontRow, tagCallback: (data: Ta
         refetch,
     } = useSiteSearch(siteParams);
     
-    console.log("data:", results);
 
     const splitStyles: (TagType[]) = row.style_tags ? row.style_tags.split(';').map(
         str => ({label: str, type: "style" as const})
@@ -124,13 +151,15 @@ function FontInspector({row, tagCallback}: {row: FontRow, tagCallback: (data: Ta
                         <button 
                             className="text" 
                             key={site.domain ?? i}
-                            onClick={() => window.open(`https://${site.domain}`, '_blank')}
+                            onClick={() => navCallback(site)}
                         >
                             {site.domain}
                         </button>
                         <button 
                             type="button" 
-                            className='img-btn button-not' 
+                            style={{width: '16px'}}
+
+                            className='img-btn button-not text' 
                             onClick={() => window.open(`https://${site.domain}`, '_blank')}
                         >
                             <img src='link.svg'/>
@@ -155,14 +184,73 @@ export default function DisplayNav({
 }) {
 
     const [ nowSelected, setNowSelected ] = useState<(SiteRow | FontRow)>(current);
+    const [ index, setIndex ] = useState(0);
     const [ history, setHistory ] = useState<(SiteRow | FontRow)[]>([current]);
+
+    useEffect(() => {
+        setHistory([current]);  
+        setIndex(0);             
+        setNowSelected(current);
+    }, [current]);
+
+    const editHistory = (item: SiteRow | FontRow) => {
+        const arr = history.slice(0, index + 1);
+        setHistory([...arr, item]);
+        setIndex(index + 1);
+        setNowSelected(item);
+    }
 
     return (
         <div className="display-screen">
+            <div className="search-row">
+                <button 
+                    type="button" 
+                    className="text img-btn"
+                    style={{
+                        pointerEvents: (index == 0) ? 'none' : 'all',
+                        opacity: (index == 0) ? '0.5' : '1'
+                    }}
+                    onClick={() => {
+                        setNowSelected(history[index - 1]);
+                        setIndex(index - 1);
+                    }}
+                >
+                    <img src="back.svg"/>
+                </button>
+                <button 
+                    type="button" 
+                    className="text img-btn"
+                    style={{
+                        pointerEvents: (index >= history.length - 1) ? 'none' : 'all',
+                        opacity: (index >= history.length - 1) ? '0.5' : '1'
+                    }}
+                    onClick={() => {
+                        setNowSelected(history[index + 1]);
+                        setIndex(index + 1);
+                    }}
+                >
+                    <img src="forward.svg"/>
+                </button>
+                <button
+                    type="button"
+                    className="text button-not img-btn"
+                    onClick={() => ('TODO')}
+                >
+                    ×
+                </button>
+            </div>
             {nowSelected._tag == "FontRow" ? 
-                <FontInspector row={nowSelected} tagCallback={tagCallback}/>
-            :
-            <SiteInspector site={nowSelected} catCallback={catCallback}/>
+                <FontInspector 
+                    row={nowSelected} 
+                    tagCallback={tagCallback}
+                    navCallback={editHistory}
+                />
+                :
+                <SiteInspector 
+                    site={nowSelected} 
+                    catCallback={catCallback}
+                    navCallback={editHistory}
+                />
             }
         </div>
     );

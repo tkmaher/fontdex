@@ -11,7 +11,7 @@ import Toggle from '@/components/filters/toggle';
 import FontBlock from '@/components/display/fontblock';
 import Pagination from '@/components/display/pagination';
 import CytoscapeGraph from '@/components/graph/graph';
-import FontInspector, { TagType } from '@/components/display/sitefontinspector';
+import DisplayNav, { TagType } from '@/components/display/sitefontinspector';
 
 type SearchValType = "title+desc" | "only title" | "only description";
 type SearchFieldType = "td" | "t" | "d";
@@ -334,7 +334,7 @@ export default function FontSearchForm() {
             }
             {!viewMode && <Pagination submit={submit} results={results} pageIn={pageIn} disabled={isFetching}/>}
           </div>
-          {fontSelected && <FontInspector row={fontSelected} tagCallback={tagCallback}/>}
+          {fontSelected && <DisplayNav current={fontSelected} tagCallback={tagCallback}/>}
         </div>
 
         <div className='search-row'>

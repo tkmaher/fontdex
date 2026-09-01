@@ -42,14 +42,27 @@ const fetchFontsEffect = (filter: FontFilter) => Effect.gen(function* () {
     try: () => response.json() as Promise<unknown>,
     catch: (cause) => new NetworkError({ cause }),
   });
-    
-  const tagged = {
-    ...(json as Record<string, unknown>),
-    _tag: filter.bubbleSort ? "BubbleFontResult" : "RowFontResult",
-  };
+
+  const rawResult = json as Record<string, unknown>;
+
+  const tagged = filter.bubbleSort
+    ? {
+        ...rawResult,
+        _tag: "BubbleFontResult",
+      }
+    : {
+        ...rawResult,
+        data: Array.isArray(rawResult.data)
+          ? (rawResult.data as Record<string, unknown>[]).map((row) => ({
+              ...row,
+              _tag: "FontRow",
+            }))
+          : rawResult.data,
+        _tag: "RowFontResult",
+      };
 
   console.log("returned:", json);
-  
+
   return yield* Schema.decodeUnknown(FontResult)(tagged).pipe(
     Effect.mapError((cause) => new Error(`Failed to decode response: ${String(cause)}`)),
   );
