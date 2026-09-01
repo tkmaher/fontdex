@@ -5,55 +5,56 @@ import { useCallback, useEffect, useState } from "react";
 import Pagination from "@/components/display/pagination";
 import { useFontLookup } from "../effects/fetch-font";
 
+interface SiteFontRow {
+    data: FontRow;
+    isFetching: boolean;
+}
+
 function SiteInspector({
-    site, 
+    site,
     catCallback,
     navCallback
 }: {
-    site: SiteRow, 
+    site: SiteRow,
     catCallback: (category: string) => void,
     navCallback: (item: FontRow | SiteRow) => void
 }) {
+    const fonts = [site.font1, site.font2, site.font3];
 
-    const fonts = [site.font1, site.font2, site.font3]
-
-    const fontRows: (FontRow | null)[] = fonts.map(font => {
-        const { data: fontData } = useFontLookup(font ?? "");
-        if (!fontData) return null;
-        return fontData;
+    const fontRows: (SiteFontRow | null)[] = fonts.map(font => {
+        const { data, isFetching } = useFontLookup(font ?? "");
+        if (!font || !data) return null;
+        return { data, isFetching };
     });
+
+    const validFontRows = fontRows.filter((row): row is SiteFontRow => row !== null);
+    const allFetched = validFontRows.every(row => !row.isFetching);
 
     return (
         <>
             <div className="font-inspector">
                 <div className="inspector-title">
-                    <div className="text">
-                        {site.domain}
-                    </div>
-                    <button 
-                        type="button" 
+                    <div className="text">{site.domain}</div>
+                    <button
+                        type="button"
                         className="img-btn text"
                         onClick={() => window.open(`https://${site.domain}`, '_blank')}
                     >
-                        <img src="link.svg"/>
+                        <img src="link.svg" />
                     </button>
                 </div>
                 <div className="inspector-desc text">#{site.rank} - {site.category}</div>
                 <div className="inspector-sub text">Fonts</div>
             </div>
             <div className="inspector-sites">
-                {fontRows.map((fontRow, i) => (
-                    fontRow && <div className="search-row" key={i}>
-                        <button 
-                            className="text" 
-                            key={fontRow.font ?? i}
-                            onClick={() => navCallback(fontRow)}
-                        >
-                            {fontRow.font}
+                {allFetched ? validFontRows.map((row, i) => (
+                    <div className="search-row" key={row.data.font ?? i}>
+                        <button className="text" onClick={() => navCallback(row.data)}>
+                            {row.data.font}
                         </button>
-                        
                     </div>
-                ))}
+                )) : 
+                <div className="text">loading…</div> }
             </div>
         </>
     );
