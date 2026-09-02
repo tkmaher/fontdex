@@ -1,14 +1,9 @@
 "use client";
 import { FontRow, SiteFilter, SiteRow } from "@/types/schema";
 import { useSiteSearch } from "../effects/fetch-font-sites";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Pagination from "@/components/display/pagination";
 import { useFontLookup } from "../effects/fetch-font";
-
-interface SiteFontRow {
-    data: FontRow;
-    isFetching: boolean;
-}
 
 function SiteInspector({
     site,
@@ -19,16 +14,13 @@ function SiteInspector({
     catCallback: (category: string) => void,
     navCallback: (item: FontRow | SiteRow) => void
 }) {
-    const fonts = [site.font1, site.font2, site.font3];
-
-    const fontRows: (SiteFontRow | null)[] = fonts.map(font => {
-        const { data, isFetching } = useFontLookup(font ?? "");
-        if (!font || !data) return null;
-        return { data, isFetching };
-    });
-
-    const validFontRows = fontRows.filter((row): row is SiteFontRow => row !== null);
-    const allFetched = validFontRows.every(row => !row.isFetching);
+    const fontSlots = [site.font1, site.font2, site.font3];
+    const results = fontSlots.map(font => useFontLookup(font ?? ""));
+    const activeResults = results.filter((_, i) => Boolean(fontSlots[i]));
+    const allFetched = activeResults.every(r => !r.isFetching);
+    const loadedFonts = activeResults
+        .map(r => r.data)
+        .filter((font): font is FontRow => Boolean(font));
 
     return (
         <>
@@ -45,8 +37,8 @@ function SiteInspector({
                 </div>
                 <div className="inspector-desc text">Ranked #{site.rank}</div>
                 <div className="tag-map">
-                    <button className='button-img-rev'
-                    
+                    <button
+                        className='button-img-rev'
                         onClick={() => catCallback(site.category)}
                     >
                         {site.category}
@@ -55,14 +47,17 @@ function SiteInspector({
                 <div className="inspector-sub text">Fonts</div>
             </div>
             <div className="inspector-sites">
-                {allFetched ? validFontRows.map((row, i) => (
-                    <div className="search-row" key={row.data.font ?? i}>
-                        <button className="text" onClick={() => navCallback(row.data)}>
-                            {row.data.font}
-                        </button>
-                    </div>
-                )) : 
-                <div className="text">loading…</div> }
+                {!allFetched ? (
+                    <div className="text">loading…</div>
+                ) : (
+                    loadedFonts.map((font, i) => (
+                        <div className="search-row" key={font.font ?? i}>
+                            <button className="text" onClick={() => navCallback(font)}>
+                                {font.font}
+                            </button>
+                        </div>
+                    ))
+                )}
             </div>
         </>
     );
@@ -75,28 +70,42 @@ export interface TagType {
     type: TagSplit
 }
 
+function buildTags(row: FontRow): TagType[] {
+    const styleTags: TagType[] = row.style_tags
+        ? row.style_tags.split(';').map(label => ({ label, type: "style" as const }))
+        : [];
+    const subsetTags: TagType[] = row.subsets
+        ? row.subsets.split(';').map(label => ({ label, type: "subset" as const }))
+        : [];
+    return [
+        { label: row.classification, type: "classification" as const },
+        ...styleTags,
+        ...subsetTags,
+    ].sort((a, b) => a.label.localeCompare(b.label));
+}
+
 function FontInspector({
-    row, 
+    row,
     tagCallback,
-    navCallback
+    navCallback,
 }: {
-    row: FontRow, 
+    row: FontRow,
     tagCallback: (data: TagType) => void,
-    navCallback: (item: FontRow | SiteRow) => void
+    navCallback: (item: FontRow | SiteRow) => void,
 }) {
 
-    const [ pageIn, setPageIn ] = useState<number>(1);
-    const [ siteParams, setSiteParams ] = useState<SiteFilter | null>({ font: row.font, page: 1 });
+    const [page, setPage] = useState<number>(1);
+    const [siteParams, setSiteParams] = useState<SiteFilter | null>({ font: row.font, page: 1 });
 
     useEffect(() => {
-        setPageIn(1);
+        setPage(1);
         setSiteParams({ font: row.font, page: 1 });
     }, [row.font]);
 
     const submit = (paging?: 'next' | 'back') => {
-        const page = paging ? (paging === 'next' ? pageIn + 1 : pageIn - 1) : 1;
-        setSiteParams({ font: row.font, page });
-        setPageIn(page);
+        const nextPage = paging ? (paging === 'next' ? page + 1 : page - 1) : 1;
+        setSiteParams({ font: row.font, page: nextPage });
+        setPage(nextPage);
     };
 
     const {
@@ -106,19 +115,16 @@ function FontInspector({
         isFetching,
         refetch,
     } = useSiteSearch(siteParams);
-    
 
-    const splitStyles: (TagType[]) = row.style_tags ? row.style_tags.split(';').map(
-        str => ({label: str, type: "style" as const})
-    ) : [];
-    const splitSubsets: (TagType[]) = row.subsets ? row.subsets.split(';').map(
-        str => ({label: str, type: "subset" as const})
-    ) : [];
-    const combined: TagType[] = [
-        ...[{ label: row.classification, type: "classification" as const }],
-        ...splitStyles, 
-        ...splitSubsets,
-    ].sort((a, b) => (a.label.localeCompare(b.label)));
+    const tags = buildTags(row);
+
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.scrollTop = 0;
+        }
+    }, [row, isFetching]);
 
     return (
         <>
@@ -126,58 +132,57 @@ function FontInspector({
                 <div className="inspector-title text">{row.font}</div>
                 <div className="inspector-desc text">{row.notes}</div>
                 <div className="tag-map">
-                    {combined.map((tag, i) => {
-                        return <div key={i}>
-                            <button className={`
-                                ${tag.type == 'style' ? 'button-rev' 
-                                : tag.type == 'classification' ? 'button-not-rev'
-                                : 'button-img-rev'
+                    {tags.map((tag, i) => (
+                        <div key={i}>
+                            <button
+                                className={
+                                    tag.type === 'style' ? 'button-rev'
+                                        : tag.type === 'classification' ? 'button-not-rev'
+                                        : 'button-img-rev'
                                 }
-                            `}
                                 onClick={() => tagCallback(tag)}
                             >
                                 {tag.label}
                             </button>
                         </div>
-                    })}
+                    ))}
                 </div>
                 <div className="inspector-sub text">{row.hits} site{row.hits != 1 && 's'}</div>
             </div>
-            <div className="inspector-sites">
-                {isFetching && !results && !isError && (
+            <div className="inspector-sites" ref={containerRef}>
+                {isFetching ? (
                     <div className="text">loading…</div>
-                )}
-                {isError && (
+                ) : 
+                    results?.data.map((site, i) => (
+                        <div className="search-row" key={site.domain ?? i}>
+                            <button
+                                className="text"
+                                onClick={() => navCallback(site)}
+                            >
+                                {site.domain}
+                            </button>
+                            <button
+                                type="button"
+                                style={{ width: '16px' }}
+                                className='img-btn button-not text'
+                                onClick={() => window.open(`https://${site.domain}`, '_blank')}
+                            >
+                                <img src='link.svg' />
+                            </button>
+                        </div>
+                    ))
+                }
+                {isError &&
                     <div>
                         <button type="button" className='text' style={{ pointerEvents: 'none' }}>
                             {error instanceof Error ? error.message : "Something went wrong."}
                         </button>
                         <button type="button" onClick={() => refetch()}>Retry</button>
                     </div>
-                )}
-                {results?.data.map((site, i) => (
-                    <div className="search-row" key={i}>
-                        <button 
-                            className="text" 
-                            key={site.domain ?? i}
-                            onClick={() => navCallback(site)}
-                        >
-                            {site.domain}
-                        </button>
-                        <button 
-                            type="button" 
-                            style={{width: '16px'}}
-
-                            className='img-btn button-not text' 
-                            onClick={() => window.open(`https://${site.domain}`, '_blank')}
-                        >
-                            <img src='link.svg'/>
-                        </button>
-                    </div>
-                ))}
+                }
             </div>
 
-            <Pagination submit={submit} results={results} pageIn={pageIn} disabled={isFetching} />
+            <Pagination submit={submit} results={results} pageIn={page} disabled={isFetching} />
         </>
     );
 }
@@ -194,60 +199,63 @@ export default function DisplayNav({
     closeInspector: () => void
 }) {
 
-    const [ nowSelected, setNowSelected ] = useState<(SiteRow | FontRow)>(current);
-    const [ index, setIndex ] = useState(0);
-    const [ history, setHistory ] = useState<(SiteRow | FontRow)[]>([current]);
+    const [selected, setSelected] = useState<(SiteRow | FontRow)>(current);
+    const [index, setIndex] = useState(0);
+    const [history, setHistory] = useState<(SiteRow | FontRow)[]>([current]);
 
     useEffect(() => {
-        setHistory([current]);  
-        setIndex(0);             
-        setNowSelected(current);
+        setHistory([current]);
+        setIndex(0);
+        setSelected(current);
     }, [current]);
 
-    const editHistory = (item: SiteRow | FontRow) => {
-        const arr = history.slice(0, index + 1);
-        setHistory([...arr, item]);
+    const navigateTo = (item: SiteRow | FontRow) => {
+        const nextHistory = [...history.slice(0, index + 1), item];
+        setHistory(nextHistory);
+        setIndex(nextHistory.length - 1);
+        setSelected(item);
+    };
+
+    const goBack = () => {
+        setSelected(history[index - 1]);
+        setIndex(index - 1);
+    };
+
+    const goForward = () => {
+        setSelected(history[index + 1]);
         setIndex(index + 1);
-        setNowSelected(item);
-    }
+    };
+
+    const canGoBack = index > 0;
+    const canGoForward = index < history.length - 1;
 
     return (
         <div className="display-screen">
             <div className="search-row">
-
-                <button 
-                    type="button" 
+                <button
+                    type="button"
                     className="text img-btn"
                     style={{
-                        pointerEvents: (index == 0) ? 'none' : 'all',
-                        opacity: (index == 0) ? '0.5' : '1'
+                        pointerEvents: canGoBack ? 'all' : 'none',
+                        opacity: canGoBack ? '1' : '0.5'
                     }}
-                    onClick={() => {
-                        setNowSelected(history[index - 1]);
-                        setIndex(index - 1);
-                    }}
+                    onClick={goBack}
                 >
-                    <img src="back.svg"/>
+                    <img src="back.svg" />
                 </button>
-                <button 
-                    type="button" 
+                <button
+                    type="button"
                     className="text img-btn"
                     style={{
-                        pointerEvents: (index >= history.length - 1) ? 'none' : 'all',
-                        opacity: (index >= history.length - 1) ? '0.5' : '1'
+                        pointerEvents: canGoForward ? 'all' : 'none',
+                        opacity: canGoForward ? '1' : '0.5'
                     }}
-                    onClick={() => {
-                        setNowSelected(history[index + 1]);
-                        setIndex(index + 1);
-                    }}
+                    onClick={goForward}
                 >
-                    <img src="forward.svg"/>
+                    <img src="forward.svg" />
                 </button>
-                <div className="text" style={{flexGrow: 1}}>
-                    {nowSelected._tag == "FontRow" ? 
-                        'Font' : 
-                        'Site'
-                    }
+                <div className="text" style={{ flexGrow: 1 }}>
+                    {selected._tag == "FontRow" ? 'Font' : 'Site'}
                 </div>
                 <button
                     type="button"
@@ -257,19 +265,19 @@ export default function DisplayNav({
                     ×
                 </button>
             </div>
-            {nowSelected._tag == "FontRow" ? 
-                <FontInspector 
-                    row={nowSelected} 
+            {selected._tag == "FontRow" ? (
+                <FontInspector
+                    row={selected}
                     tagCallback={tagCallback}
-                    navCallback={editHistory}
+                    navCallback={navigateTo}
                 />
-                :
-                <SiteInspector 
-                    site={nowSelected} 
+            ) : (
+                <SiteInspector
+                    site={selected}
                     catCallback={catCallback}
-                    navCallback={editHistory}
+                    navCallback={navigateTo}
                 />
-            }
+            )}
         </div>
     );
 }

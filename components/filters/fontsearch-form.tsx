@@ -316,7 +316,17 @@ export default function FontSearchForm() {
         <div className='left-split'>
           <div className={`left-stack ${fontSelected ? 'left-split-small' : 'left-split-large'}`}>
           <div className='search-row' style={{justifyContent: 'center'}}>
-            <button type='button' className='text' onClick={handleViewSwitch}>(switch view)</button>
+            <button 
+              type='button' 
+              className='text' 
+              onClick={handleViewSwitch}
+              style={{
+                flexGrow: 1,
+                marginRight: fontSelected ? '1px' : '0px',
+              }}
+            >
+              (switch view)
+            </button>
 
           </div>
             {!viewMode
