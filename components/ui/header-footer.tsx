@@ -69,8 +69,9 @@ export function Footer() {
                 XXX sites cataloged
                 </div>
             </div>
+            <div className="text" style={{flexGrow: 1}}></div>
             <div className="text">
-            Archived August 2026
+                Archived August 2026
             </div>
         </div>
         

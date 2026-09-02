@@ -43,7 +43,15 @@ function SiteInspector({
                         <img src="link.svg" />
                     </button>
                 </div>
-                <div className="inspector-desc text">#{site.rank} - {site.category}</div>
+                <div className="inspector-desc text">Ranked #{site.rank}</div>
+                <div className="tag-map">
+                    <button className='button-img-rev'
+                    
+                        onClick={() => catCallback(site.category)}
+                    >
+                        {site.category}
+                    </button>
+                </div>
                 <div className="inspector-sub text">Fonts</div>
             </div>
             <div className="inspector-sites">
@@ -177,11 +185,13 @@ function FontInspector({
 export default function DisplayNav({
     current,
     tagCallback,
-    catCallback
+    catCallback,
+    closeInspector
 }: {
     current: SiteRow | FontRow,
     tagCallback: (data: TagType) => void,
     catCallback: (category: string) => void
+    closeInspector: () => void
 }) {
 
     const [ nowSelected, setNowSelected ] = useState<(SiteRow | FontRow)>(current);
@@ -204,6 +214,7 @@ export default function DisplayNav({
     return (
         <div className="display-screen">
             <div className="search-row">
+
                 <button 
                     type="button" 
                     className="text img-btn"
@@ -232,10 +243,16 @@ export default function DisplayNav({
                 >
                     <img src="forward.svg"/>
                 </button>
+                <div className="text" style={{flexGrow: 1}}>
+                    {nowSelected._tag == "FontRow" ? 
+                        'Font' : 
+                        'Site'
+                    }
+                </div>
                 <button
                     type="button"
                     className="text button-not img-btn"
-                    onClick={() => ('TODO')}
+                    onClick={closeInspector}
                 >
                     ×
                 </button>

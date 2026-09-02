@@ -312,8 +312,13 @@ export default function FontSearchForm() {
         </div>
       </div>
       <div className='left-container'>
+
         <div className='left-split'>
-          <div className={`left-stack ${fontSelected && 'left-split-small'}`}>
+          <div className={`left-stack ${fontSelected ? 'left-split-small' : 'left-split-large'}`}>
+          <div className='search-row' style={{justifyContent: 'center'}}>
+            <button type='button' className='text' onClick={handleViewSwitch}>(switch view)</button>
+
+          </div>
             {!viewMode
               ? results?._tag === "RowFontResult" && (
                   <div className='boxes'>
@@ -334,13 +339,16 @@ export default function FontSearchForm() {
             }
             {!viewMode && <Pagination submit={submit} results={results} pageIn={pageIn} disabled={isFetching}/>}
           </div>
-          {fontSelected && <DisplayNav current={fontSelected} tagCallback={tagCallback}/>}
+          {fontSelected && 
+            <DisplayNav 
+              current={fontSelected} 
+              tagCallback={tagCallback}
+              closeInspector={() => setFontSelected(null)}
+            />
+          }
         </div>
 
-        <div className='search-row'>
-          <button type='button' className='text' onClick={handleViewSwitch}>switch view</button>
-          <button type='button' onClick={handleViewSwitch}>switch view</button>
-        </div>
+
       </div>
     </>
   );

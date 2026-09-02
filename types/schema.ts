@@ -57,7 +57,7 @@ export type SiteFilter = Schema.Schema.Type<typeof SiteFilter>;
 
 export const SiteRow = Schema.Struct({
   domain: Schema.String,
-  category: Schema.NullOr(Schema.String),
+  category: Schema.String,
   font1: Schema.NullOr(Schema.String),
   font2: Schema.NullOr(Schema.String),
   font3: Schema.NullOr(Schema.String),

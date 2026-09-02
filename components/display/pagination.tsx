@@ -29,7 +29,7 @@ export default function Pagination({
               >
                 back
               </button>
-              <div className='text'>
+              <div className='text' style={{flexGrow: 1}}>
                 {PAGE_SIZE * (pageIn - 1) + 1}-{Math.min(PAGE_SIZE * (pageIn), results?.rows)} of {results?.rows}
               </div> 
               

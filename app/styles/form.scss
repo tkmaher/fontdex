@@ -229,6 +229,8 @@ input[type=text] {
     justify-content: space-between;
     flex-shrink: 0;
     padding-right: 1px;
+    gap: 1px;
+    text-align: center;
 }
 
 .submit {
