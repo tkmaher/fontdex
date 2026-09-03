@@ -50,8 +50,12 @@ export const FontResult = Schema.Union(RowFontResult, BubbleFontResult);
 export type FontResult = Schema.Schema.Type<typeof FontResult>;
 
 export const SiteFilter = Schema.Struct({
-  font: Schema.String,
+  font: Schema.optional(Schema.String),
   page: Schema.Number,
+  category: Schema.optional(Schema.String),
+  searchString: Schema.optional(Schema.String),
+  sortBy: Schema.optional(Schema.String),
+  bubbleSort: Schema.optional(Schema.String),
 });
 export type SiteFilter = Schema.Schema.Type<typeof SiteFilter>;
 
@@ -66,10 +70,16 @@ export const SiteRow = Schema.Struct({
 });
 export type SiteRow = Schema.Schema.Type<typeof SiteRow>;
 
-export const SiteResult = Schema.Struct({
+export const RowSiteResult = Schema.Struct({
   data: Schema.Array(SiteRow),
   rows: Schema.Number,
   pages: Schema.Number,
-  _tag: Schema.Literal("SiteResult")
+  _tag: Schema.Literal("RowSiteResult")
 });
-export type SiteResult = Schema.Schema.Type<typeof SiteResult>;
+
+export const BubbleSiteResult = Schema.Struct({
+  data: Schema.Array(NodeData),
+  _tag: Schema.Literal("BubbleSiteResult"),
+});
+
+export const SiteResult = Schema.Union(BubbleSiteResult, RowSiteResult);

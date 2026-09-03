@@ -170,6 +170,7 @@ input[type=text] {
     border: 1px solid v.$highlight;
     min-width: 15em;
     font-size: 12px;
+    flex-grow: 1;
     font-family: 'Commit Mono', monospace;
     @media (hover: hover) {
         &:hover {

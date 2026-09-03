@@ -57,6 +57,7 @@
 
 .font-block {
     width: calc(v.$left-width / var(--block-var) - 1px);
+    max-width: calc(v.$left-width / var(--block-var) - 1px);
     height: calc(v.$left-width / var(--block-var) - 1px);
     display: inline-block;
     background-color: transparent;

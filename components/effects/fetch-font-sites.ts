@@ -9,8 +9,12 @@ const SITES_API_URL = "https://fonts-index-api.tomaszkkmaher.workers.dev/api/sit
 
 const fetchSitesEffect = (filter: SiteFilter) => Effect.gen(function* () {
   const url = new URL(SITES_API_URL);
-  url.searchParams.set("font", filter.font);
+  filter.font && url.searchParams.set("font", filter.font);
   url.searchParams.set("page", String(filter.page));
+  url.searchParams.set("sortBy", String(filter.sortBy));
+  filter.category && url.searchParams.set("category", filter.category);
+  filter.searchString && url.searchParams.set("searchString", filter.searchString);
+  filter.bubbleSort && url.searchParams.set("bubbleSort", String(filter.bubbleSort));
 
   const response = yield* Effect.tryPromise({
     try: (signal) => fetch(url, { signal }),
@@ -31,16 +35,21 @@ const fetchSitesEffect = (filter: SiteFilter) => Effect.gen(function* () {
 
   const rawResult = json as Record<string, unknown>;
 
-  const tagged = {
-    ...rawResult,
-    data: Array.isArray(rawResult.data)
-      ? (rawResult.data as Record<string, unknown>[]).map((row) => ({
-          ...row,
-          _tag: "SiteRow",
-        }))
-      : rawResult.data,
-    _tag: "SiteResult"
-  };
+  const tagged = filter.bubbleSort
+  ? {
+      ...rawResult,
+      _tag: "BubbleSiteResult",
+    }
+  : {
+      ...rawResult,
+      data: Array.isArray(rawResult.data)
+        ? (rawResult.data as Record<string, unknown>[]).map((row) => ({
+            ...row,
+            _tag: "SiteRow",
+          }))
+        : rawResult.data,
+      _tag: "RowSiteResult",
+    };
 
   return yield* Schema.decodeUnknown(SiteResult)(tagged).pipe(
     Effect.mapError((cause) => new Error(`Failed to decode response: ${String(cause)}`)),

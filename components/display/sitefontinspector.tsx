@@ -94,8 +94,8 @@ function FontInspector({
     navCallback: (item: FontRow | SiteRow) => void,
 }) {
 
-    const [page, setPage] = useState<number>(1);
-    const [siteParams, setSiteParams] = useState<SiteFilter | null>({ font: row.font, page: 1 });
+    const [ page, setPage ] = useState<number>(1);
+    const [ siteParams, setSiteParams ] = useState<SiteFilter | null>({ font: row.font, page: 1 });
 
     useEffect(() => {
         setPage(1);
@@ -153,7 +153,7 @@ function FontInspector({
                 {isFetching ? (
                     <div className="text">loading…</div>
                 ) : 
-                    results?.data.map((site, i) => (
+                    results?._tag == "RowSiteResult" && results.data.map((site, i) => (
                         <div className="search-row" key={site.domain ?? i}>
                             <button
                                 className="text"

@@ -2,16 +2,17 @@
 import '@/app/styles/form.scss';
 import { useFontSearch } from "@/components/effects/fetch-fonts";
 
-import { useMemo, useState } from "react";
+import { use, useMemo, useState } from "react";
 import { Schema } from "effect";
 import { ArrayFormatter } from "effect/ParseResult";
-import { FontFilter, FontRow } from "@/types/schema";
+import { FontFilter, FontRow, SiteFilter } from "@/types/schema";
 import { Dropdown, DropdownAggregate } from '@/components/filters/dropdown';
 import Toggle from '@/components/filters/toggle';
 import FontBlock from '@/components/display/fontblock';
 import Pagination from '@/components/display/pagination';
 import CytoscapeGraph from '@/components/graph/graph';
 import DisplayNav, { TagType } from '@/components/display/sitefontinspector';
+import { useSiteSearch } from '../effects/fetch-font-sites';
 
 type SearchValType = "title+desc" | "only title" | "only description";
 type SearchFieldType = "td" | "t" | "d";
@@ -22,6 +23,8 @@ type BubbleSortType = "classification" | "style_tags" | "subsets";
 const CLASSIFICATION_FILTER: FontFilter = { bubbleSort: "classification", page: 1 };
 const SUBSETS_FILTER: FontFilter = { bubbleSort: "subsets", page: 1 };
 const STYLES_FILTER: FontFilter = { bubbleSort: "style_tags", page: 1 };
+
+const CATEGORY_FILTER: FontFilter = { bubbleSort: "categories", page: 1 };
 
 const INIT_ROW_FILTER: FontFilter = { page: 1, sortBy: "popHL" };
 
@@ -38,6 +41,10 @@ export default function FontSearchForm() {
   const [ sortBy, setSortBy ] = useState<SortByType>("popHL");
   const [ bubbleSort, setBubbleSort ] = useState<BubbleSortType>("classification");
 
+  const [ searchingFonts, setSearchingFonts ] = useState(true);
+
+  const [ category, setCategory ] = useState<string>("");
+
   // --- paging / view ---
   const [ pageIn, setPageIn ] = useState<number>(1);
   const [ viewMode, setViewMode ] = useState<boolean>(false); // false = row, true = bubble
@@ -46,6 +53,9 @@ export default function FontSearchForm() {
 
   const [ rowParams, setRowParams ] = useState<FontFilter | null>(INIT_ROW_FILTER);
   const [ bubbleParams, setBubbleParams ] = useState<FontFilter | null>(null);
+
+  const [ siteRowParams, setSiteRowParams ] = useState<SiteFilter | null>(INIT_ROW_FILTER);
+  const [ siteBubbleParams, setSiteBubbleParams ] = useState<SiteFilter | null>(null);
 
   const [ fontSelected, setFontSelected ] = useState<FontRow | null>(null);
 
@@ -97,7 +107,6 @@ export default function FontSearchForm() {
     return true;
   };
   
-  // Search button / form submit: only queries whichever view is currently active.
   const submit = (paging?: 'next' | 'back') => {
     if (viewMode) {
       setRowParams(null);
@@ -109,7 +118,6 @@ export default function FontSearchForm() {
     submitRow(page);
   };
 
-  // Switching views: only fetch the alternate view if it has never been queried.
   const handleViewSwitch = () => {
     const switchingToBubble = !viewMode;
     if (switchingToBubble && bubbleParams === null) {
@@ -126,13 +134,14 @@ export default function FontSearchForm() {
     isError,
     isFetching,
     refetch,
-  } = useFontSearch(rowParams);
+  } = searchingFonts ? useFontSearch(rowParams) : useSiteSearch(siteRowParams);
 
-  const { data: bubbleResults } = useFontSearch(bubbleParams);
+  const { data: bubbleResults } = searchingFonts ? useFontSearch(bubbleParams) : useSiteSearch(siteBubbleParams);
 
   const { data: classResults } = useFontSearch(CLASSIFICATION_FILTER);
   const { data: subsetResults } = useFontSearch(SUBSETS_FILTER);
   const { data: styleResults } = useFontSearch(STYLES_FILTER);
+  const { data: categoryResults } = useSiteSearch(CATEGORY_FILTER);
 
   const classifications = useMemo(
     () => (classResults?._tag === "BubbleFontResult" ? classResults.data.map(i => `${i.label}`) : []),
@@ -146,12 +155,22 @@ export default function FontSearchForm() {
     () => (subsetResults?._tag === "BubbleFontResult" ? subsetResults.data.map(i => `${i.label}`) : []),
     [subsetResults]
   );
+  const categories = useMemo(
+    () => (categoryResults?._tag === "BubbleSiteResult" ? categoryResults.data.map(i => `${i.label}`) : []),
+    [categoryResults]
+  );
 
   const queryFull = `
-    ${classification ? 'classification: ' + classification : ''}
-    ${styles.length > 0 ? 'styles: ' + styles.join(styleOr ? ' or ' : ' and ') : ''}
-    ${subsets.length > 0 ? 'subsets: ' + subsets.join(subsetOr ? ' or ' : ' and ') : ''}
-    ${searchString.length > 0 ? 'contains ' + searchString + ' in ' + searchVal : ''}
+    ${classification ? 'classification: ' + classification + ';' : ''}
+    ${styles.length > 0 ? 'styles: ' + styles.join(styleOr ? ' or ' : ' and ') + ';' : ''}
+    ${subsets.length > 0 ? 'subsets: ' + subsets.join(subsetOr ? ' or ' : ' and ') + ';' : ''}
+    ${searchString.length > 0 ? 'contains ' + searchString + ' in ' + searchVal + ';' : ''}
+    ${'ordered by ' + sortVal}
+  `;
+
+  const queryFullSites = `
+    ${category ? 'category: ' + category + ';' : ''}
+    ${searchString.length > 0 ? 'contains ' + searchString + ';'  : ''}
     ${'ordered by ' + sortVal}
   `;
 
@@ -176,6 +195,7 @@ export default function FontSearchForm() {
     setSubsetOr(true);
     setSortVal("popularity, desc");
     setSortBy("popHL");
+    setCategory("");
   }
 
   const tagCallback = (data: TagType) => {
@@ -210,41 +230,66 @@ export default function FontSearchForm() {
   return (
     <>
       <div className='right-stack'>
+        <div className='search-row'>
+          <button 
+            type="button" 
+            className='text submit' 
+            onClick={() => setSearchingFonts(!searchingFonts)}
+          >
+            {searchingFonts ? "(browse fonts)" : "(browse sites)"}
+          </button>
+        </div>
         <form onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
           event.preventDefault();
           submit();
         }}>
-          <div className='search-col'>
-            <div className='text'>classification</div>
-            <div className='search-row'>
-              <Dropdown
-                title=""
-                value={classification}
-                options={classifications}
-                setterCallback={setClassification}
-              />
+
+          {searchingFonts ? 
+            <>
+              <div className='search-col'>
+                <div className='text'>classification</div>
+                <div className='search-row'>
+                  <Dropdown
+                    title=""
+                    value={classification}
+                    options={classifications}
+                    setterCallback={setClassification}
+                  />
+                </div>
+              </div>
+              <div className='search-col'>
+                <div className='text'>styles</div>
+                <DropdownAggregate title='' options={stylesList} value={styles} setterCallback={setStyles} />
+                {styles.length > 1 && <Toggle
+                  value={styleOr}
+                  setterCallback={setStyleOr}
+                  str1="inclusive"
+                  str2="exclusive"
+                />}
+              </div>
+              <div className='search-col'>
+                <div className='text'>subsets</div>
+                <DropdownAggregate title='' options={subsetsList} value={subsets} setterCallback={setSubsets} />
+                {subsets.length > 1 && <Toggle
+                  value={subsetOr}
+                  setterCallback={setSubsetOr}
+                  str1="inclusive"
+                  str2="exclusive"
+                />}
+              </div>
+            </> : 
+            <div className='search-col'>
+              <div className='text'>category</div>
+              <div className='search-row'>
+                <Dropdown
+                  title=""
+                  value={category}
+                  options={categories}
+                  setterCallback={setCategory}
+                />
+              </div>
             </div>
-          </div>
-          <div className='search-col'>
-            <div className='text'>styles</div>
-            <DropdownAggregate title='' options={stylesList} value={styles} setterCallback={setStyles} />
-            {styles.length > 1 && <Toggle
-              value={styleOr}
-              setterCallback={setStyleOr}
-              str1="inclusive"
-              str2="exclusive"
-            />}
-          </div>
-          <div className='search-col'>
-            <div className='text'>subsets</div>
-            <DropdownAggregate title='' options={subsetsList} value={subsets} setterCallback={setSubsets} />
-            {subsets.length > 1 && <Toggle
-              value={subsetOr}
-              setterCallback={setSubsetOr}
-              str1="inclusive"
-              str2="exclusive"
-            />}
-          </div>
+          }
           <div className='search-col'>
             <div className='text'>filter</div>
             <div className='search-row'>
@@ -255,14 +300,14 @@ export default function FontSearchForm() {
                 placeholder='contains…'
                 onChange={(e) => setSearchString(e.target.value)}
               />
-              <Dropdown
+              {searchingFonts && <Dropdown
                 title="title+desc"
                 value={searchVal}
                 options={["title+desc", "only title", "only description"]}
                 setterCallback={setSearchVal}
                 removeNegate
                 removeRemove
-              />
+              />}
               {searchString.length > 0 &&
                 <button
                     type="button"
@@ -290,17 +335,16 @@ export default function FontSearchForm() {
         </form>
 
         <div className='search-col'>
-          <div className='search-row'>
-            {queryFull}
-            <button type="button" className='text' disabled={isFetching} onClick={clearFilters}>
-              clear
-            </button>
+          <div className='search-row text' style={{width: 'auto'}}>
+            {searchingFonts ? queryFull : queryFullSites}
           </div>
           <div className='search-row'>
             <button type="submit" className='text submit' disabled={isFetching} onClick={() => submit()}>
               search
             </button>
-
+            <button type="button" className='text' disabled={isFetching} onClick={clearFilters}>
+              clear
+            </button>
 
           </div>
           {isError && (
