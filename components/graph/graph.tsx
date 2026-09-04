@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import cytoscape, { Core, EdgeDefinition, ElementDefinition, NodeDefinition } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import { Effect, pipe } from 'effect';
-import { BubbleFontResult } from '@/types/schema';
+import { BubbleFontResult, BubbleSiteResult } from '@/types/schema';
 
 // Register the layout extension once per module load.
 if (typeof cytoscape('layout', 'cose-bilkent') === 'undefined') {
@@ -28,7 +28,7 @@ function colorForIndex(i: number): string {
   return PALETTE[i % PALETTE.length];
 }
 
-const buildElements = (fontdata: BubbleFontResult) =>
+const buildElements = (fontdata: BubbleFontResult | BubbleSiteResult) =>
   Effect.sync(() => {
     const nodes: ElementDefinition[] = fontdata.data.map((n, i) => ({
       data: {
@@ -52,7 +52,7 @@ function fadeInAfterPaint(cy: Core, nodes: cytoscape.NodeCollection) {
 }
 
 interface CytoscapeGraphProps {
-  fontdata: BubbleFontResult;
+  fontdata: BubbleFontResult | BubbleSiteResult;
 }
 
 export default function CytoscapeGraph({ fontdata }: CytoscapeGraphProps) {

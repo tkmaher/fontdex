@@ -95,16 +95,16 @@ function FontInspector({
 }) {
 
     const [ page, setPage ] = useState<number>(1);
-    const [ siteParams, setSiteParams ] = useState<SiteFilter | null>({ font: row.font, page: 1 });
+    const [ siteParams, setSiteParams ] = useState<SiteFilter | null>({ font: row.font, page: 1, sortBy: "popHL" });
 
     useEffect(() => {
         setPage(1);
-        setSiteParams({ font: row.font, page: 1 });
+        setSiteParams({ font: row.font, page: 1, sortBy: "popHL" });
     }, [row.font]);
 
     const submit = (paging?: 'next' | 'back') => {
         const nextPage = paging ? (paging === 'next' ? page + 1 : page - 1) : 1;
-        setSiteParams({ font: row.font, page: nextPage });
+        setSiteParams({ font: row.font, page: nextPage, sortBy: "popHL" });
         setPage(nextPage);
     };
 

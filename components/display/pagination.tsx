@@ -15,7 +15,7 @@ export default function Pagination({
 }) {
     return (
         <div className='pagination'>
-          {results?._tag == "RowFontResult" || results?._tag == "SiteResult" ? 
+          {results?._tag == "RowFontResult" || results?._tag == "RowSiteResult" ? 
             <>
               <button 
                 className='text' 

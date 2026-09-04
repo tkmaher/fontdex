@@ -1,7 +1,17 @@
 import "@/app/styles/display.scss";
-import { FontRow } from "@/types/schema";
+import { FontRow, SiteRow } from "@/types/schema";
 
-export default function FontBlock({row, index, setter, selected}: {row: FontRow, index: number, setter: () => {}, selected: boolean}) {
+export default function Block({
+    row, 
+    index, 
+    setter, 
+    selected
+}: {
+    row: FontRow | SiteRow, 
+    index: number, 
+    setter: () => {}, 
+    selected: boolean
+}) {
     return (
         <div className="font-block">
             <button 
@@ -13,9 +23,9 @@ export default function FontBlock({row, index, setter, selected}: {row: FontRow,
                 `}
                 onClick={() => setter()}
             >
-                {row.font}
+                {row._tag == "FontRow" ? row.font : row.domain}
                 <br/>
-                {row.hits}
+                {row._tag == "FontRow" ? row.hits : row.rank}
             </button>
         </div>
     )

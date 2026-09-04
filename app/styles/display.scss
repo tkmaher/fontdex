@@ -27,7 +27,6 @@
     width: v.$left-width;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     gap: 1px;
 
     .boxes {
@@ -36,6 +35,7 @@
         flex-direction: row;
         flex-wrap: wrap;
         gap: 1px;
+        flex-grow: 1;
     }
 }
 
@@ -89,6 +89,7 @@
         justify-self: flex-end;
         background-color: v.$highlight;
         gap: 1px;
+        user-select: none;
         padding: 1px;
         button {
             border: none !important;
@@ -116,8 +117,8 @@
     }
     .inspector-desc {
         flex-grow: 1;
-        text-indent: 1em;
         width: 100%;
+        user-select: all;
     }
 
     .inspector-sub {

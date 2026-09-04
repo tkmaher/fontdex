@@ -2,17 +2,17 @@
 import '@/app/styles/form.scss';
 import { useFontSearch } from "@/components/effects/fetch-fonts";
 
-import { use, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Schema } from "effect";
 import { ArrayFormatter } from "effect/ParseResult";
-import { FontFilter, FontRow, SiteFilter } from "@/types/schema";
+import { FontFilter, FontRow, SiteFilter, SiteRow } from "@/types/schema";
 import { Dropdown, DropdownAggregate } from '@/components/filters/dropdown';
 import Toggle from '@/components/filters/toggle';
-import FontBlock from '@/components/display/fontblock';
 import Pagination from '@/components/display/pagination';
 import CytoscapeGraph from '@/components/graph/graph';
 import DisplayNav, { TagType } from '@/components/display/sitefontinspector';
 import { useSiteSearch } from '../effects/fetch-font-sites';
+import Block from '@/components/display/fontblock';
 
 type SearchValType = "title+desc" | "only title" | "only description";
 type SearchFieldType = "td" | "t" | "d";
@@ -51,20 +51,16 @@ export default function FontSearchForm() {
 
   const [ formError, setFormError ] = useState<string | null>(null);
 
-  const [ rowParams, setRowParams ] = useState<FontFilter | null>(INIT_ROW_FILTER);
+  const [ rowParams, setRowParams ] = useState<FontFilter | SiteFilter | null>(INIT_ROW_FILTER);
   const [ bubbleParams, setBubbleParams ] = useState<FontFilter | null>(null);
 
-  const [ siteRowParams, setSiteRowParams ] = useState<SiteFilter | null>(INIT_ROW_FILTER);
-  const [ siteBubbleParams, setSiteBubbleParams ] = useState<SiteFilter | null>(null);
-
-  const [ fontSelected, setFontSelected ] = useState<FontRow | null>(null);
+  const [ selectedResult, setSelectedResult ] = useState<FontRow | SiteRow | null>(null);
 
   const searchField: SearchFieldType = useMemo(
     () => (searchVal === "title+desc" ? "td" : searchVal === "only title" ? "t" : "d"),
     [searchVal]
   );
 
-  // Shared fields between row & bubble filters.
   const buildBaseFilter = () => ({
     searchString,
     classification: classification || undefined,
@@ -76,12 +72,21 @@ export default function FontSearchForm() {
     searchField,
   });
 
+  const buildBaseSiteFilter = () => ({
+    searchString,
+    category: category || undefined,
+    sortBy,
+  });
+
   const reportDecodeError = (left: Parameters<typeof ArrayFormatter.formatErrorSync>[0]) => {
     setFormError(ArrayFormatter.formatErrorSync(left)[0]?.message ?? "Invalid input.");
   };
 
   const submitRow = (page: number) => {
-    const result = Schema.decodeUnknownEither(FontFilter)({ ...buildBaseFilter(), page });
+    const result = 
+      searchingFonts ?
+      Schema.decodeUnknownEither(FontFilter)({ ...buildBaseFilter(), page })
+      : Schema.decodeUnknownEither(SiteFilter)({ ...buildBaseSiteFilter(), page });
     if (result._tag === "Left") {
       reportDecodeError(result.left);
       return false;
@@ -93,10 +98,15 @@ export default function FontSearchForm() {
   };
 
   const submitBubble = () => {
-    const result = Schema.decodeUnknownEither(FontFilter)({
+    const result = searchingFonts ? Schema.decodeUnknownEither(FontFilter)({
       ...buildBaseFilter(),
       page: 1,
       bubbleSort,
+    }) :
+    Schema.decodeUnknownEither(SiteFilter)({
+      ...buildBaseSiteFilter(),
+      page: 1,
+      bubbleSort: "categories"
     });
     if (result._tag === "Left") {
       reportDecodeError(result.left);
@@ -134,9 +144,9 @@ export default function FontSearchForm() {
     isError,
     isFetching,
     refetch,
-  } = searchingFonts ? useFontSearch(rowParams) : useSiteSearch(siteRowParams);
+  } = searchingFonts ? useFontSearch(rowParams) : useSiteSearch(rowParams);
 
-  const { data: bubbleResults } = searchingFonts ? useFontSearch(bubbleParams) : useSiteSearch(siteBubbleParams);
+  const { data: bubbleResults } = searchingFonts ? useFontSearch(bubbleParams) : useSiteSearch(bubbleParams);
 
   const { data: classResults } = useFontSearch(CLASSIFICATION_FILTER);
   const { data: subsetResults } = useFontSearch(SUBSETS_FILTER);
@@ -173,6 +183,10 @@ export default function FontSearchForm() {
     ${searchString.length > 0 ? 'contains ' + searchString + ';'  : ''}
     ${'ordered by ' + sortVal}
   `;
+
+  useEffect(() => {
+    clearFilters();
+  }, [searchingFonts]);
 
   const handleSortSelect = (selected: SortValType) => {
     setSortVal(selected);
@@ -211,7 +225,30 @@ export default function FontSearchForm() {
       subsets: data.type === "subset" ? [data.label] : [],
       styleOr: true,
       subsetOr: true,
-      sortBy: "popHL",
+      sortBy,
+      searchField,
+      page: 1,
+    });
+
+    if (result._tag === "Left") {
+      reportDecodeError(result.left);
+      return;
+    }
+    setFormError(null);
+    setBubbleParams(null);
+    setViewMode(false);
+    setPageIn(1);
+    setRowParams(result.right);
+  };
+
+  const catCallback = (cat: string) => {
+    clearFilters();
+    setCategory(cat);
+
+    const result = Schema.decodeUnknownEither(SiteFilter)({
+      searchString: "",
+      category: cat,
+      sortBy,
       searchField,
       page: 1,
     });
@@ -236,7 +273,7 @@ export default function FontSearchForm() {
             className='text submit' 
             onClick={() => setSearchingFonts(!searchingFonts)}
           >
-            {searchingFonts ? "(browse fonts)" : "(browse sites)"}
+            {searchingFonts ? "(browsing fonts)" : "(browsing sites)"}
           </button>
         </div>
         <form onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
@@ -358,7 +395,7 @@ export default function FontSearchForm() {
       <div className='left-container'>
 
         <div className='left-split'>
-          <div className={`left-stack ${fontSelected ? 'left-split-small' : 'left-split-large'}`}>
+          <div className={`left-stack ${selectedResult ? 'left-split-small' : 'left-split-large'}`}>
           <div className='search-row' style={{justifyContent: 'center'}}>
             <button 
               type='button' 
@@ -366,7 +403,7 @@ export default function FontSearchForm() {
               onClick={handleViewSwitch}
               style={{
                 flexGrow: 1,
-                marginRight: fontSelected ? '1px' : '0px',
+                marginRight: selectedResult ? '1px' : '0px',
               }}
             >
               (switch view)
@@ -374,30 +411,37 @@ export default function FontSearchForm() {
 
           </div>
             {!viewMode
-              ? results?._tag === "RowFontResult" && (
+              ? (results?._tag === "RowFontResult" || results?._tag == "RowSiteResult") && (
                   <div className='boxes'>
                     {results.data.map((row, i) => (
-                      <FontBlock 
+                      <Block 
                         row={row} 
                         index={i} 
-                        setter={async () => setFontSelected(row)} 
-                        selected={fontSelected?.font === row.font}
+                        setter={async () => setSelectedResult(row)} 
+                        selected={
+                          selectedResult == row
+                        }
                         key={i} 
                       />
                     ))}
+                    {results.data.length == 0 && (
+                      <div className='search-row'>
+                          no results found
+                      </div>)}
                   </div>
                 )
-              : bubbleResults?._tag === "BubbleFontResult" && (
+              : (bubbleResults?._tag === "BubbleFontResult" || bubbleResults?._tag === "BubbleSiteResult") && (
                   <CytoscapeGraph fontdata={bubbleResults} />
                 )
             }
             {!viewMode && <Pagination submit={submit} results={results} pageIn={pageIn} disabled={isFetching}/>}
           </div>
-          {fontSelected && 
+          {selectedResult && 
             <DisplayNav 
-              current={fontSelected} 
+              current={selectedResult} 
               tagCallback={tagCallback}
-              closeInspector={() => setFontSelected(null)}
+              catCallback={catCallback}
+              closeInspector={() => setSelectedResult(null)}
             />
           }
         </div>

@@ -42,8 +42,8 @@ export const NodeData = Schema.Struct({
 export const BubbleFontResult = Schema.Struct ({
   data: Schema.Array(NodeData),
   _tag: Schema.Literal("BubbleFontResult"),
-
 });
+
 export type BubbleFontResult = Schema.Schema.Type<typeof BubbleFontResult>;
 
 export const FontResult = Schema.Union(RowFontResult, BubbleFontResult);
@@ -82,4 +82,7 @@ export const BubbleSiteResult = Schema.Struct({
   _tag: Schema.Literal("BubbleSiteResult"),
 });
 
+export type BubbleSiteResult = Schema.Schema.Type<typeof BubbleSiteResult>;
+
 export const SiteResult = Schema.Union(BubbleSiteResult, RowSiteResult);
+export type SiteResult = Schema.Schema.Type<typeof SiteResult>;
