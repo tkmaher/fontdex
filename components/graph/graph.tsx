@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import cytoscape, { Core, EdgeDefinition, ElementDefinition, NodeDefinition } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import { Effect, pipe } from 'effect';
-import { BubbleFontResult, BubbleSiteResult } from '@/types/schema';
+import { BubbleFontResult, BubbleSiteResult, FontFilter, SiteFilter } from '@/types/schema';
 
 // Register the layout extension once per module load.
 if (typeof cytoscape('layout', 'cose-bilkent') === 'undefined') {
@@ -51,11 +51,13 @@ function fadeInAfterPaint(cy: Core, nodes: cytoscape.NodeCollection) {
   });
 }
 
-interface CytoscapeGraphProps {
+export default function CytoscapeGraph({ 
+  fontdata,
+  filter
+ }: {
   fontdata: BubbleFontResult | BubbleSiteResult;
-}
-
-export default function CytoscapeGraph({ fontdata }: CytoscapeGraphProps) {
+  filter: FontFilter | SiteFilter | null;
+ }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
 

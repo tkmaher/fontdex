@@ -52,7 +52,7 @@ export default function FontSearchForm() {
   const [ formError, setFormError ] = useState<string | null>(null);
 
   const [ rowParams, setRowParams ] = useState<FontFilter | SiteFilter | null>(INIT_ROW_FILTER);
-  const [ bubbleParams, setBubbleParams ] = useState<FontFilter | null>(null);
+  const [ bubbleParams, setBubbleParams ] = useState<FontFilter | SiteFilter | null>(null);
 
   const [ selectedResult, setSelectedResult ] = useState<FontRow | SiteRow | null>(null);
 
@@ -431,7 +431,7 @@ export default function FontSearchForm() {
                   </div>
                 )
               : (bubbleResults?._tag === "BubbleFontResult" || bubbleResults?._tag === "BubbleSiteResult") && (
-                  <CytoscapeGraph fontdata={bubbleResults} />
+                  <CytoscapeGraph fontdata={bubbleResults} filter={bubbleParams} />
                 )
             }
             {!viewMode && <Pagination submit={submit} results={results} pageIn={pageIn} disabled={isFetching}/>}
