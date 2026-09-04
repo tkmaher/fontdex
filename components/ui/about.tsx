@@ -11,7 +11,7 @@ export default function About({
         <div className={`about ${hidden ? '' : 'about-unhidden'}`}>
             <div className="about-bg"/>
             <button className="img-btn" onClick={() => setAboutHidden(true)}>
-                ✕
+                ×
             </button>
             <div className="about-box">
                 test

@@ -2,7 +2,7 @@
 import '@/app/styles/form.scss';
 import { useFontSearch } from "@/components/effects/fetch-fonts";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Schema } from "effect";
 import { ArrayFormatter } from "effect/ParseResult";
 import { FontFilter, FontRow, SiteFilter, SiteRow } from "@/types/schema";
@@ -18,7 +18,7 @@ type SearchValType = "title+desc" | "only title" | "only description";
 type SearchFieldType = "td" | "t" | "d";
 type SortValType = "popularity, desc" | "popularity, asc" | "a → z" | "z → a";
 type SortByType = "popHL" | "popLH" | "fontAZ" | "fontZA";
-type BubbleSortType = "classification" | "style_tags" | "subsets";
+export type BubbleSortType = "classification" | "style_tags" | "subsets" | "categories";
 
 const CLASSIFICATION_FILTER: FontFilter = { bubbleSort: "classification", page: 1 };
 const SUBSETS_FILTER: FontFilter = { bubbleSort: "subsets", page: 1 };
@@ -78,9 +78,12 @@ export default function FontSearchForm() {
     sortBy,
   });
 
-  const reportDecodeError = (left: Parameters<typeof ArrayFormatter.formatErrorSync>[0]) => {
-    setFormError(ArrayFormatter.formatErrorSync(left)[0]?.message ?? "Invalid input.");
-  };
+  const reportDecodeError = useCallback(
+    (left: Parameters<typeof ArrayFormatter.formatErrorSync>[0]) => {
+      setFormError(ArrayFormatter.formatErrorSync(left)[0]?.message ?? "Invalid input.");
+    },
+    []
+  );
 
   const submitRow = (page: number) => {
     const result = 
@@ -199,7 +202,7 @@ export default function FontSearchForm() {
     }
   };
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSearchString("");
     setSearchVal("title+desc");
     setClassification("");
@@ -210,59 +213,107 @@ export default function FontSearchForm() {
     setSortVal("popularity, desc");
     setSortBy("popHL");
     setCategory("");
-  }
+  }, []);
+  
+  
 
-  const tagCallback = (data: TagType) => {
-    clearFilters();
-    setClassification(data.type === "classification" ? data.label : "");
-    setStyles(data.type === "style" ? [data.label] : []);
-    setSubsets(data.type === "subset" ? [data.label] : []);
-
-    const result = Schema.decodeUnknownEither(FontFilter)({
-      searchString: "",
-      classification: data.type === "classification" ? data.label : undefined,
-      styles: data.type === "style" ? [data.label] : [],
-      subsets: data.type === "subset" ? [data.label] : [],
-      styleOr: true,
-      subsetOr: true,
+  const formStateRef = useRef({
+    searchString,
+    classification,
+    styles,
+    subsets,
+    styleOr,
+    subsetOr,
+    sortBy,
+    searchField,
+    category,
+  });
+  
+  useEffect(() => {
+    formStateRef.current = {
+      searchString,
+      classification,
+      styles,
+      subsets,
+      styleOr,
+      subsetOr,
       sortBy,
       searchField,
-      page: 1,
-    });
+      category,
+    };
+  });
 
-    if (result._tag === "Left") {
-      reportDecodeError(result.left);
-      return;
-    }
-    setFormError(null);
-    setBubbleParams(null);
-    setViewMode(false);
-    setPageIn(1);
-    setRowParams(result.right);
-  };
+  const tagCallback = useCallback(
+    (data: TagType, clearBefore: boolean) => {
+      const state = formStateRef.current;
+      clearBefore && clearFilters();
+  
+      const newClassification =
+        data.type === "classification" ? data.label : clearBefore ? "" : state.classification;
+      const newStyles =
+        data.type === "style_tags" ? [data.label] : clearBefore ? [] : state.styles;
+      const newSubsets =
+        data.type === "subsets" ? [data.label] : clearBefore ? [] : state.subsets; // was `styles` in the original — likely a copy-paste bug
+  
+      setClassification(newClassification);
+      setStyles(newStyles);
+      setSubsets(newSubsets);
+  
+      const result = Schema.decodeUnknownEither(FontFilter)({
+        searchString: clearBefore ? "" : state.searchString,
+        classification: newClassification,
+        styles: newStyles,
+        subsets: newSubsets,
+        styleOr: clearBefore ? true : state.styleOr,
+        subsetOr: clearBefore ? true : state.subsetOr,
+        sortBy: clearBefore ? "popHL" : state.sortBy,
+        searchField: clearBefore ? "td" : state.searchField,
+        page: 1,
+      });
+  
+      if (result._tag === "Left") {
+        reportDecodeError(result.left);
+        return;
+      }
+      setFormError(null);
+      setBubbleParams(null);
+      clearBefore && setViewMode(false);
+      setPageIn(1);
+      setRowParams(result.right);
+    },
+    [clearFilters, reportDecodeError]
+  );
+  
+  const catCallback = useCallback(
+    (cat: string, clearBefore: boolean) => {
+      const state = formStateRef.current;
+      clearBefore && clearFilters();
+      setCategory(cat);
+  
+      const result = Schema.decodeUnknownEither(SiteFilter)({
+        searchString: clearBefore ? "" : state.searchString,
+        category: cat,
+        sortBy: clearBefore ? "popHL" : state.sortBy,
+        page: 1,
+      });
+  
+      if (result._tag === "Left") {
+        reportDecodeError(result.left);
+        return;
+      }
+      setFormError(null);
+      setBubbleParams(null);
+      clearBefore && setViewMode(false);
+      setPageIn(1);
+      setRowParams(result.right);
+    },
+    [clearFilters, reportDecodeError]
+  );
 
-  const catCallback = (cat: string) => {
-    clearFilters();
-    setCategory(cat);
-
-    const result = Schema.decodeUnknownEither(SiteFilter)({
-      searchString: "",
-      category: cat,
-      sortBy,
-      searchField,
-      page: 1,
-    });
-
-    if (result._tag === "Left") {
-      reportDecodeError(result.left);
-      return;
-    }
-    setFormError(null);
-    setBubbleParams(null);
-    setViewMode(false);
-    setPageIn(1);
-    setRowParams(result.right);
-  };
+  const handleGraphSelect = useCallback(
+    async (row: FontRow | SiteRow) => setSelectedResult(row),
+    []
+  );
 
   return (
     <>
@@ -386,7 +437,12 @@ export default function FontSearchForm() {
           </div>
           {isError && (
             <div>
-              <button className='text' style={{pointerEvents: 'none'}}>{error instanceof Error ? error.message : "Something went wrong."}</button>
+              <button 
+                className='text' 
+                style={{pointerEvents: 'none'}}
+              >
+                {error instanceof Error ? error.message : "Something went wrong."}
+              </button>
               <button onClick={() => refetch()}>Retry</button>
             </div>
           )}
@@ -431,7 +487,13 @@ export default function FontSearchForm() {
                   </div>
                 )
               : (bubbleResults?._tag === "BubbleFontResult" || bubbleResults?._tag === "BubbleSiteResult") && (
-                  <CytoscapeGraph fontdata={bubbleResults} filter={bubbleParams} />
+                  <CytoscapeGraph
+                    fontdata={bubbleParams ? bubbleResults : results}
+                    tagCallback={tagCallback}
+                    catCallback={catCallback}
+                    filter={bubbleSort}
+                    setter={handleGraphSelect}
+                  />
                 )
             }
             {!viewMode && <Pagination submit={submit} results={results} pageIn={pageIn} disabled={isFetching}/>}

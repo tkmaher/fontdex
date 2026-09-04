@@ -4,6 +4,7 @@ import { useSiteSearch } from "../effects/fetch-font-sites";
 import { useEffect, useRef, useState } from "react";
 import Pagination from "@/components/display/pagination";
 import { useFontLookup } from "../effects/fetch-font";
+import { BubbleSortType } from "../filters/fontsearch-form";
 
 function SiteInspector({
     site,
@@ -11,7 +12,7 @@ function SiteInspector({
     navCallback
 }: {
     site: SiteRow,
-    catCallback: (category: string) => void,
+    catCallback: (category: string, clearBefore: boolean) => void,
     navCallback: (item: FontRow | SiteRow) => void
 }) {
     const fontSlots = [site.font1, site.font2, site.font3];
@@ -39,7 +40,7 @@ function SiteInspector({
                 <div className="tag-map">
                     <button
                         className='button-img-rev'
-                        onClick={() => catCallback(site.category)}
+                        onClick={() => catCallback(site.category, true)}
                     >
                         {site.category}
                     </button>
@@ -63,19 +64,17 @@ function SiteInspector({
     );
 }
 
-type TagSplit = "subset" | "style" | "classification";
-
 export interface TagType {
     label: string,
-    type: TagSplit
+    type: BubbleSortType
 }
 
 function buildTags(row: FontRow): TagType[] {
     const styleTags: TagType[] = row.style_tags
-        ? row.style_tags.split(';').map(label => ({ label, type: "style" as const }))
+        ? row.style_tags.split(';').map(label => ({ label, type: "style_tags" as const }))
         : [];
     const subsetTags: TagType[] = row.subsets
-        ? row.subsets.split(';').map(label => ({ label, type: "subset" as const }))
+        ? row.subsets.split(';').map(label => ({ label, type: "subsets" as const }))
         : [];
     return [
         { label: row.classification, type: "classification" as const },
@@ -90,7 +89,7 @@ function FontInspector({
     navCallback,
 }: {
     row: FontRow,
-    tagCallback: (data: TagType) => void,
+    tagCallback: (data: TagType, clearBefore: boolean) => void,
     navCallback: (item: FontRow | SiteRow) => void,
 }) {
 
@@ -136,11 +135,11 @@ function FontInspector({
                         <div key={i}>
                             <button
                                 className={
-                                    tag.type === 'style' ? 'button-rev'
+                                    tag.type === 'style_tags' ? 'button-rev'
                                         : tag.type === 'classification' ? 'button-not-rev'
                                         : 'button-img-rev'
                                 }
-                                onClick={() => tagCallback(tag)}
+                                onClick={() => tagCallback(tag, true)}
                             >
                                 {tag.label}
                             </button>
@@ -194,8 +193,8 @@ export default function DisplayNav({
     closeInspector
 }: {
     current: SiteRow | FontRow,
-    tagCallback: (data: TagType) => void,
-    catCallback: (category: string) => void
+    tagCallback: (data: TagType, clearBefore: boolean) => void,
+    catCallback: (category: string, clearBefore: boolean) => void
     closeInspector: () => void
 }) {
 

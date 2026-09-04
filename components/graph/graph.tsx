@@ -1,10 +1,22 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import cytoscape, { Core, EdgeDefinition, ElementDefinition, NodeDefinition } from 'cytoscape';
+import cytoscape, {
+  Core,
+  EdgeDefinition,
+  ElementDefinition,
+  NodeDefinition,
+} from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import { Effect, pipe } from 'effect';
-import { BubbleFontResult, BubbleSiteResult, FontFilter, SiteFilter } from '@/types/schema';
+import {
+  FontResult,
+  FontRow,
+  SiteResult,
+  SiteRow,
+} from '@/types/schema';
+import { TagType } from '@/components/display/sitefontinspector';
+import { BubbleSortType } from '../filters/fontsearch-form';
 
 // Register the layout extension once per module load.
 if (typeof cytoscape('layout', 'cose-bilkent') === 'undefined') {
@@ -21,29 +33,77 @@ const PALETTE = [
   '#F7F7F7',
   '#9EE37D',
   '#FF5154',
-  '#b97abc'
+  '#b97abc',
 ];
 
 function colorForIndex(i: number): string {
   return PALETTE[i % PALETTE.length];
 }
 
-const buildElements = (fontdata: BubbleFontResult | BubbleSiteResult) =>
-  Effect.sync(() => {
-    const nodes: ElementDefinition[] = fontdata.data.map((n, i) => ({
-      data: {
-        id: `bubble-${i}-${n.label}`,
+type GraphResult =
+  SiteResult
+  | FontResult;
+
+type GraphItem = {
+  label: string;
+  count: number;
+  row?: FontRow | SiteRow;
+};
+
+function getGraphItems(fontdata: GraphResult): GraphItem[] {
+  switch (fontdata._tag) {
+    case 'BubbleFontResult':
+    case 'BubbleSiteResult':
+      return fontdata.data.map((n) => ({
         label: `${n.label} (${n.count})`,
         count: n.count,
+      }));
+
+    case 'RowFontResult':
+      return fontdata.data.map((n) => ({
+        label: n.font,
+        count: 1,
+        row: n
+      }));
+
+    case 'RowSiteResult':
+      return fontdata.data.map((n) => ({
+        label: n.domain,
+        count: 1,
+        row: n
+      }));
+  }
+}
+
+
+function buildElements(
+  fontdata: GraphResult,
+) {
+  return Effect.sync(() => {
+    const items = getGraphItems(fontdata);
+
+    const nodes: ElementDefinition[] = items.map((n, i) => ({
+      data: {
+        id: `bubble-${i}-${n.label}`,
+        label: n.label,
+        count: n.count,
         color: colorForIndex(i),
+        row: n.row ?? null
       },
       classes: 'hidden',
     }));
 
-    return { nodes: nodes as NodeDefinition[], edges: [] as EdgeDefinition[] };
+    return {
+      nodes: nodes as NodeDefinition[],
+      edges: [] as EdgeDefinition[],
+    };
   });
+}
 
-function fadeInAfterPaint(cy: Core, nodes: cytoscape.NodeCollection) {
+function fadeInAfterPaint(
+  cy: Core,
+  nodes: cytoscape.NodeCollection,
+) {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       nodes.removeClass('hidden');
@@ -51,23 +111,43 @@ function fadeInAfterPaint(cy: Core, nodes: cytoscape.NodeCollection) {
   });
 }
 
-export default function CytoscapeGraph({ 
+export default function CytoscapeGraph({
   fontdata,
-  filter
- }: {
-  fontdata: BubbleFontResult | BubbleSiteResult;
-  filter: FontFilter | SiteFilter | null;
- }) {
+  filter,
+  tagCallback,
+  catCallback,
+  setter
+}: {
+  fontdata: GraphResult;
+  filter: BubbleSortType;
+  tagCallback: (
+    data: TagType,
+    clearBefore: boolean,
+  ) => void;
+  catCallback: (
+    category: string,
+    clearBefore: boolean,
+  ) => void;
+  setter: (row: FontRow | SiteRow) => void;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
 
-  // Create the cytoscape instance once.
+  /*
+   * Create the Cytoscape instance.
+   */
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const counts = fontdata.data.map((n) => n.count);
-    const minCount = counts.length ? Math.min(...counts) : 0;
-    const maxCount = counts.length ? Math.max(...counts) : 1;
+    const items = getGraphItems(fontdata);
+
+    const counts = items.map((n) => n.count);
+    const minCount = counts.length
+      ? Math.min(...counts)
+      : 0;
+    const maxCount = counts.length
+      ? Math.max(...counts)
+      : 1;
 
     const program = pipe(
       buildElements(fontdata),
@@ -75,6 +155,7 @@ export default function CytoscapeGraph({
         container: containerRef.current!,
         boxSelectionEnabled: false,
         elements,
+
         style: [
           {
             selector: 'node',
@@ -88,7 +169,8 @@ export default function CytoscapeGraph({
               width: `mapData(count, ${minCount}, ${maxCount}, 1, 500)`,
               height: `mapData(count, ${minCount}, ${maxCount}, 1, 500)`,
               'overlay-opacity': 0,
-              'transition-property': 'opacity, background-opacity',
+              'transition-property':
+                'opacity, background-opacity',
               'transition-duration': '0.1s',
               'font-family': 'CommitMono, monospace',
             },
@@ -109,6 +191,7 @@ export default function CytoscapeGraph({
             },
           },
         ],
+
         layout: {
           name: 'cose-bilkent',
           fit: true,
@@ -116,10 +199,11 @@ export default function CytoscapeGraph({
           randomize: true,
           nodeRepulsion: 8000,
           idealEdgeLength: 100,
+
           // Instant positioning - the "entrance" is opacity-only.
           animate: false,
         } as any,
-      }))
+      })),
     );
 
     let cancelled = false;
@@ -134,15 +218,44 @@ export default function CytoscapeGraph({
         cy.on('mouseover', 'node', (evt) => {
           evt.target.addClass('hover');
         });
+
         cy.on('mouseout', 'node', (evt) => {
           evt.target.removeClass('hover');
         });
 
-
-        // Empty effect - fill in whatever should happen on node click.
+        /*
+         * Clicking a font calls tagCallback.
+         * Clicking a site calls catCallback.
+         */
         cy.on('tap', 'node', (evt) => {
           const node = evt.target;
-          console.log('here');
+          const name = node.data('label').split(' (')[0] as string | undefined;
+
+          if (!name) return;
+
+          const row = node.data('row') as FontRow | SiteRow | null;
+          if (row) {
+            setter(row);
+            return;
+          }
+
+          if (
+            fontdata._tag === 'BubbleFontResult' ||
+            fontdata._tag === 'RowFontResult'
+          ) {
+            tagCallback(
+              {
+                label: name,
+                type: filter,
+              } as TagType,
+              false,
+            );
+          } else {
+            catCallback(
+              name,
+              false,
+            );
+          }
         });
 
         cy.ready(() => {
@@ -156,32 +269,49 @@ export default function CytoscapeGraph({
       cyRef.current?.destroy();
       cyRef.current = null;
     };
-    // Only (re)create the cytoscape instance on mount/unmount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [
+    fontdata,
+    filter,
+    tagCallback,
+    catCallback,
+  ]);
 
-  // Update elements + re-layout whenever the list changes.
+  /*
+   * Update elements + re-layout whenever the list changes.
+   *
+   * This keeps the existing Cytoscape instance when possible,
+   * while preserving the original sizing/layout behavior.
+   */
   useEffect(() => {
     const cy = cyRef.current;
+
     if (!cy) return;
 
-    const counts = fontdata.data.map((n) => n.count);
-    const minCount = counts.length ? Math.min(...counts) : 0;
-    const maxCount = counts.length ? Math.max(...counts) : 1;
+    const items = getGraphItems(fontdata);
+
+    const counts = items.map((n) => n.count);
+    const minCount = counts.length
+      ? Math.min(...counts)
+      : 0;
+    const maxCount = counts.length
+      ? Math.max(...counts)
+      : 1;
 
     Effect.runPromise(buildElements(fontdata))
       .then(({ nodes }) => {
         cy.startBatch();
+
         cy.elements().remove();
-        cy.add(nodes); // added with the "hidden" class already applied
+        cy.add(nodes);
+
         cy.style()
-          .selector('node')
-          .style({
-            width: `mapData(count, ${minCount}, ${maxCount}, 30, 150)`,
-            height: `mapData(count, ${minCount}, ${maxCount}, 30, 150)`,
-            backgroundColor: `#FFFFF`
-          })
-          .update();
+        .selector('node')
+        .style({
+          width: `mapData(count, ${minCount}, ${maxCount}, 30, 150)`,
+          height: `mapData(count, ${minCount}, ${maxCount}, 30, 150)`,
+        })
+        .update();
+
         cy.endBatch();
 
         const layout = cy.layout({
@@ -193,7 +323,7 @@ export default function CytoscapeGraph({
         } as any);
 
         layout.one('layoutstop', () => {
-          cy.fit(undefined, 30); // ensure full graph is in view
+          cy.fit(undefined, 30);
           fadeInAfterPaint(cy, cy.nodes());
         });
 
@@ -205,7 +335,7 @@ export default function CytoscapeGraph({
   return (
     <div
       ref={containerRef}
-      className='graph-container'
+      className="graph-container"
     />
   );
 }
