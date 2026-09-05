@@ -60,94 +60,157 @@ function getGraphItems(fontdata: GraphResult): GraphItem[] {
     case 'RowFontResult':
       return fontdata.data.map((n) => ({
         label: n.font,
-        count: 1,
+        count: n.hits,
         row: n,
       }));
 
     case 'RowSiteResult':
       return fontdata.data.map((n) => ({
         label: n.domain,
-        count: 1,
+        count: (8000 - n.rank),
         row: n,
       }));
   }
 }
 
-/*
- * Sizing.
- *
- * Node dimensions are computed in JS (not via `mapData`) and baked into
- * each node's data. This avoids the zero-division `mapData` produces when
- * every node has the same count (true of every individual font/site node,
- * since their count is always 1) and lets us size a node from its label
- * length so long names actually fit instead of overlapping neighbors.
- */
-const CHARS_PER_LINE = 14;
-const ROW_FONT_SIZE = 11;
-const BUBBLE_FONT_SIZE_MIN = 11;
-const BUBBLE_FONT_SIZE_MAX = 22;
+  const CHARS_PER_LINE = 14;
+  const ROW_FONT_SIZE_MIN = 9;
+  const ROW_FONT_SIZE_MAX = 18;
+  const BUBBLE_FONT_SIZE_MIN = 11;
+  const BUBBLE_FONT_SIZE_MAX = 22;
 
-function textBlockSize(label: string, fontSize: number) {
-  const charWidth = fontSize * 0.62;
-  const lines = Math.max(1, Math.ceil(label.length / CHARS_PER_LINE));
-  const width = Math.min(label.length, CHARS_PER_LINE) * charWidth + 24;
-  const height = lines * fontSize * 1.4 + 24;
-  return Math.max(width, height);
-}
+  function textBlockSize(label: string, fontSize: number) {
+    const charWidth = fontSize * 0.62;
+    const lines = Math.max(1, Math.ceil(label.length / CHARS_PER_LINE));
+    const width = Math.min(label.length, CHARS_PER_LINE) * charWidth + 24;
+    const height = lines * fontSize * 1.4 + 24;
 
-function sizeForBubbleNode(
-  count: number,
-  minCount: number,
-  maxCount: number,
-  label: string,
-) {
-  const range = maxCount - minCount;
-  const t = range > 0 ? (count - minCount) / range : 0.5;
-  const fontSize =
-    BUBBLE_FONT_SIZE_MIN + t * (BUBBLE_FONT_SIZE_MAX - BUBBLE_FONT_SIZE_MIN);
-  const countSize = 50 + t * 230;
-  const size = Math.max(countSize, textBlockSize(label, fontSize));
-  return { size, fontSize, textMaxWidth: Math.max(40, size - 28) };
-}
+    return Math.max(width, height);
+  }
 
-function sizeForRowNode(label: string) {
-  const size = Math.max(70, textBlockSize(label, ROW_FONT_SIZE));
-  return { size, fontSize: ROW_FONT_SIZE, textMaxWidth: Math.max(40, size - 28) };
-}
+  function countScale(
+    count: number,
+    minCount: number,
+    maxCount: number,
+  ) {
+    const range = maxCount - minCount;
 
-function buildElements(fontdata: GraphResult) {
-  if (!fontdata) return { nodes: [], edges: [] };
-  const items = getGraphItems(fontdata);
-  const counts = items.map((n) => n.count);
-  const minCount = counts.length ? Math.min(...counts) : 0;
-  const maxCount = counts.length ? Math.max(...counts) : 1;
-  const isBubbleTag =
-    fontdata._tag === 'BubbleFontResult' || fontdata._tag === 'BubbleSiteResult';
+    return range > 0
+      ? (count - minCount) / range
+      : 0.5;
+  }
 
-  const nodes: ElementDefinition[] = items.map((n, i) => {
-    const dims = isBubbleTag
-      ? sizeForBubbleNode(n.count, minCount, maxCount, n.label)
-      : sizeForRowNode(n.label);
+  function sizeForBubbleNode(
+    count: number,
+    minCount: number,
+    maxCount: number,
+    label: string,
+  ) {
+    const t = countScale(count, minCount, maxCount);
+
+    const fontSize =
+      BUBBLE_FONT_SIZE_MIN +
+      t * (BUBBLE_FONT_SIZE_MAX - BUBBLE_FONT_SIZE_MIN);
+
+    const countSize = 50 + t * 230;
+    const size = Math.max(
+      countSize,
+      textBlockSize(label, fontSize),
+    );
 
     return {
-      data: {
-        id: `bubble-${i}-${n.label}`,
-        label: n.label,
-        count: n.count,
-        color: colorForIndex(i),
-        row: n.row ?? null,
-        size: dims.size,
-        fontSize: dims.fontSize,
-        textMaxWidth: dims.textMaxWidth,
-      },
+      size,
+      fontSize,
+      textMaxWidth: Math.max(40, size - 28),
     };
-  });
+  }
 
-  return {
-    nodes: nodes as NodeDefinition[],
-    edges: [] as EdgeDefinition[],
-  };
-}
+  function sizeForRowNode(
+    count: number,
+    minCount: number,
+    maxCount: number,
+    label: string,
+  ) {
+    const t = countScale(count, minCount, maxCount);
+
+    const fontSize =
+      ROW_FONT_SIZE_MIN +
+      t * (ROW_FONT_SIZE_MAX - ROW_FONT_SIZE_MIN);
+
+    // Keep the same basic scaling behavior as category nodes,
+    // but use a smaller range appropriate for individual fonts/sites.
+    const countSize = 50 + t * 230;
+
+    const size = Math.max(
+      countSize,
+      textBlockSize(label, fontSize),
+      70,
+    );
+
+    return {
+      size,
+      fontSize,
+      textMaxWidth: Math.max(40, size - 28),
+    };
+  }
+
+  function buildElements(fontdata: GraphResult) {
+    if (!fontdata) {
+      return {
+        nodes: [],
+        edges: [],
+      };
+    }
+
+    const items = getGraphItems(fontdata);
+
+    const counts = items.map((n) => n.count);
+    const minCount = counts.length
+      ? Math.min(...counts)
+      : 0;
+    const maxCount = counts.length
+      ? Math.max(...counts)
+      : 1;
+
+    const isBubbleTag =
+      fontdata._tag === 'BubbleFontResult' ||
+      fontdata._tag === 'BubbleSiteResult';
+
+    const nodes: ElementDefinition[] = items.map((n, i) => {
+      const dims = isBubbleTag
+        ? sizeForBubbleNode(
+            n.count,
+            minCount,
+            maxCount,
+            n.label,
+          )
+        : sizeForRowNode(
+            n.count,
+            minCount,
+            maxCount,
+            n.label,
+          );
+
+      return {
+        data: {
+          id: `bubble-${i}-${n.label}`,
+          label: n.label,
+          count: n.count,
+          color: colorForIndex(i),
+          row: n.row ?? null,
+          size: dims.size,
+          fontSize: dims.fontSize,
+          textMaxWidth: dims.textMaxWidth,
+        },
+      };
+    });
+
+    return {
+      nodes: nodes as NodeDefinition[],
+      edges: [] as EdgeDefinition[],
+    };
+  }
+
 
 export default function CytoscapeGraph({
   fontdata,
@@ -155,12 +218,14 @@ export default function CytoscapeGraph({
   tagCallback,
   catCallback,
   setter,
+  onBack,
 }: {
   fontdata: GraphResult;
   filter: BubbleSortType;
   tagCallback: (data: TagType, clearBefore: boolean) => void;
   catCallback: (category: string, clearBefore: boolean) => void;
   setter: (row: FontRow | SiteRow) => void;
+  onBack: () => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
@@ -256,29 +321,19 @@ export default function CytoscapeGraph({
       }
     });
 
-    const resizeObserver = new ResizeObserver(() => {
-      cy.resize();
-    });
-    resizeObserver.observe(containerRef.current);
+
   
     return () => {
-      resizeObserver.disconnect();
       cy.destroy();
       cyRef.current = null;
     };
 
   }, []);
 
-  /*
-   * Sync elements + re-layout whenever the underlying data changes.
-   * Runs once right after the instance above is created, and again on
-   * every subsequent `fontdata` change — this is the only thing that
-   * changes now, so there's a single, smooth remove/add/fade cycle
-   * instead of a full instance rebuild.
-   */
   useEffect(() => {
     const cy = cyRef.current;
     if (!cy) return;
+    if (!fontdata) return; 
   
     const { nodes } = buildElements(fontdata);
   
@@ -288,7 +343,7 @@ export default function CytoscapeGraph({
     cy.endBatch();
   
     cy.resize();
-
+  
     const layout = cy.layout({
       name: 'cose-bilkent',
       fit: true,
@@ -310,7 +365,22 @@ export default function CytoscapeGraph({
     layout.run();
   }, [fontdata]);
 
-  return (
-      <div ref={containerRef} className="graph-container" />
-  );
+  const showBack =
+  fontdata?._tag === 'RowFontResult' || fontdata?._tag === 'RowSiteResult';
+
+return (
+  <div className="graph-container" style={{ position: 'relative' }}>
+    {showBack && (
+      <button
+        type="button"
+        className="text button-not graph-back-btn"
+        onClick={onBack}
+        style={{ position: 'absolute', top: 1, left: 1, zIndex: 10 }}
+      >
+        ← back
+      </button>
+    )}
+    <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+  </div>
+);
 }

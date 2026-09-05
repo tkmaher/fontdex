@@ -141,3 +141,14 @@
         text-align: left;
     }
 }
+
+.bubble-header {
+    & > :first-child {
+        flex-grow: 1;
+        width: 100% !important;
+    }
+    .dropdown-header {
+        flex-grow: 0;
+        flex-shrink: 1;
+    }
+}

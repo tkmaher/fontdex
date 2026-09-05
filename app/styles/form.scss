@@ -23,6 +23,7 @@
 }
 
 .dropdown {
+    position: relative;
     width: 100%;
     font-size: 12px;
     border: none;
@@ -59,7 +60,9 @@
         display: flex;
         flex-direction: column;
         z-index: 100;
-        position: relative;
+        left: 0;
+        width: 100%;
+        position: absolute;
         max-height: 20em;
         overflow-y: auto;
         > * {
@@ -168,7 +171,6 @@ input[type=text] {
     margin: 0;
     padding: 0;
     border: 1px solid v.$highlight;
-    min-width: 15em;
     font-size: 12px;
     flex-grow: 1;
     font-family: 'Commit Mono', monospace;

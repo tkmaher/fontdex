@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 let idCounter = 0;
 
@@ -94,10 +94,40 @@ export function Dropdown({
     addRow?: () => void
 }) {
     const [ open, setOpen ] = useState(false);
+    const [ filterText, setFilterText ] = useState("");
 
     const negate = value && value.startsWith("!");
     const selected = negate ? value.slice(1) : value;
     const label = selected || title;
+
+    const divRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+          if (divRef.current && !divRef.current.contains(event.target)) {
+            setOpen(false); 
+          }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    // Reset the filter whenever the dropdown closes, and focus the input when it opens.
+    useEffect(() => {
+        if (open) {
+            inputRef.current?.focus();
+        } else {
+            setFilterText("");
+        }
+    }, [open]);
+
+    const filteredOptions = options.filter(option =>
+        option.toLowerCase().includes(filterText.toLowerCase())
+    );
 
     return (
         <div className="dropdown-header">
@@ -106,16 +136,27 @@ export function Dropdown({
                     type="button"
                     className={`text ${negate ? 'button-not-rev' : 'button-not'} img-btn`}
                     onClick={() => {
-                        if (!selected) return; // nothing to negate yet
+                        if (!selected) return;
                         setterCallback(negate ? selected : '!' + selected);
                     }}
                 >
                     ¬
                 </button>
             )}
-            <div className="dropdown text" onClick={() => setOpen(!open)}>
+            <div className="dropdown text" onClick={() => setOpen(!open)} ref={divRef}>
                 <div className={`${open ? 'dropdown-header dropdown-header-open' : 'dropdown-header'}`}>
-                    <button className="text" type="button">{label}</button>
+                    {open ? (
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={filterText}
+                            placeholder={label}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => setFilterText(e.target.value)}
+                        />
+                    ) : (
+                        <button className="text" type="button">{label}</button>
+                    )}
                     <button
                         className={`text ${open ? 'button-img-rev' : 'button-img'}`}
                         type="button"
@@ -129,7 +170,7 @@ export function Dropdown({
                 </div>
                 {open && (
                     <div className="dropdown-content">
-                        {options.map(option => (
+                        {filteredOptions.map(option => (
                             <button
                                 type="button"
                                 key={option}

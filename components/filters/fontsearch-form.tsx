@@ -45,6 +45,8 @@ export default function FontSearchForm() {
 
   const [ category, setCategory ] = useState<string>("");
 
+  const [ lastTag, setLastTag ] = useState<{ type: BubbleSortType; label: string } | null>(null);
+
   // --- paging / view ---
   const [ pageIn, setPageIn ] = useState<number>(1);
   const [ viewMode, setViewMode ] = useState<boolean>(false); // false = row, true = bubble
@@ -100,22 +102,50 @@ export default function FontSearchForm() {
     return true;
   };
 
-  const submitBubble = () => {
-    const result = searchingFonts ? Schema.decodeUnknownEither(FontFilter)({
-      ...buildBaseFilter(),
-      page: 1,
-      bubbleSort,
-    }) :
-    Schema.decodeUnknownEither(SiteFilter)({
-      ...buildBaseSiteFilter(),
-      page: 1,
-      bubbleSort: "categories"
-    });
+  const submitBubble = (removeTag?: { type: BubbleSortType; label: string }) => {
+    const newStyles =
+      removeTag?.type === "style_tags" ? styles.filter((s) => s !== removeTag.label) : styles;
+    const newSubsets =
+      removeTag?.type === "subsets" ? subsets.filter((s) => s !== removeTag.label) : subsets;
+    const newClassification =
+      removeTag?.type === "classification" ? "" : classification;
+    const newCategory =
+      removeTag?.type === "categories" ? "" : category;
+  
+    const result = searchingFonts
+      ? Schema.decodeUnknownEither(FontFilter)({
+          searchString,
+          classification: newClassification || undefined,
+          styles: newStyles,
+          subsets: newSubsets,
+          styleOr,
+          subsetOr,
+          sortBy,
+          searchField,
+          page: 1,
+          bubbleSort,
+        })
+      : Schema.decodeUnknownEither(SiteFilter)({
+          searchString,
+          category: newCategory || undefined,
+          sortBy,
+          page: 1,
+          bubbleSort: "categories",
+        });
+  
     if (result._tag === "Left") {
       reportDecodeError(result.left);
       return false;
     }
+  
     setFormError(null);
+    if (removeTag) {
+      if (removeTag.type === "style_tags") setStyles(newStyles);
+      if (removeTag.type === "subsets") setSubsets(newSubsets);
+      if (removeTag.type === "classification") setClassification(newClassification);
+      if (removeTag.type === "categories") setCategory(newCategory);
+      setLastTag(null);
+    }
     setBubbleParams(result.right);
     return true;
   };
@@ -209,6 +239,7 @@ export default function FontSearchForm() {
     setSortVal("popularity, desc");
     setSortBy("popHL");
     setCategory("");
+    setLastTag(null); // ← new
   }, []);
   
   
@@ -245,18 +276,19 @@ export default function FontSearchForm() {
     (data: TagType, clearBefore: boolean) => {
       const state = formStateRef.current;
       clearBefore && clearFilters();
-      setSearchingFonts(true); // font tags always imply font-mode results
+      setSearchingFonts(true);
   
-      const newClassification =
+      const newClassification = /* unchanged */
         data.type === "classification" ? data.label : clearBefore ? "" : state.classification;
       const newStyles =
-        data.type === "style_tags" ? [data.label] : clearBefore ? [] : state.styles;
+        data.type === "style_tags" ? [...state.styles, data.label] : clearBefore ? [] : state.styles;
       const newSubsets =
-        data.type === "subsets" ? [data.label] : clearBefore ? [] : state.subsets;
+        data.type === "subsets" ? [...state.subsets, data.label] : clearBefore ? [] : state.subsets;
   
       setClassification(newClassification);
       setStyles(newStyles);
       setSubsets(newSubsets);
+      setLastTag({ type: data.type as BubbleSortType, label: data.label });
   
       const result = Schema.decodeUnknownEither(FontFilter)({
         searchString: clearBefore ? "" : state.searchString,
@@ -287,8 +319,9 @@ export default function FontSearchForm() {
     (cat: string, clearBefore: boolean) => {
       const state = formStateRef.current;
       clearBefore && clearFilters();
-      setSearchingFonts(false); // categories always imply site-mode results
+      setSearchingFonts(false);
       setCategory(cat);
+      setLastTag({ type: "categories", label: cat });
   
       const result = Schema.decodeUnknownEither(SiteFilter)({
         searchString: clearBefore ? "" : state.searchString,
@@ -320,7 +353,7 @@ export default function FontSearchForm() {
     setSearchingFonts(next);
     clearFilters();
     setPageIn(1);
-    setBubbleSort("classification");
+    setBubbleSort(searchingFonts ? "categories" : "classification");
     setRowParams(INIT_ROW_FILTER);
     setBubbleParams(next ? CLASSIFICATION_FILTER : CATEGORY_FILTER);
     // setBubbleParams(null);
@@ -328,6 +361,11 @@ export default function FontSearchForm() {
   }, [searchingFonts, clearFilters]);
 
   const graphData = bubbleParams ? bubbleResults : results;
+
+  useEffect(() => {
+    submit();
+
+  }, [bubbleSort]);
 
   return (
     <>
@@ -466,19 +504,30 @@ export default function FontSearchForm() {
 
         <div className='left-split'>
           <div className={`left-stack ${selectedResult ? 'left-split-small' : 'left-split-large'}`}>
-          <div className='search-row' style={{justifyContent: 'center'}}>
+          <div className='search-row bubble-header' 
+            style={{
+              flexGrow: 1,
+              marginRight: selectedResult ? '1px' : '0px',
+            }}
+          >
             <button 
               type='button' 
               className='text' 
               onClick={handleViewSwitch}
-              style={{
-                flexGrow: 1,
-                marginRight: selectedResult ? '1px' : '0px',
-              }}
+
             >
               (switch view)
             </button>
-
+            {viewMode &&
+              <Dropdown 
+                title={bubbleSort}
+                value={bubbleSort}
+                options={searchingFonts ? ["classification", "style_tags", "subsets"] : ["categories"]}
+                setterCallback={setBubbleSort}
+                removeNegate
+                removeRemove
+              />
+            }
           </div>
             {!viewMode
               ? (results?._tag === "RowFontResult" || results?._tag == "RowSiteResult") && (
@@ -500,17 +549,16 @@ export default function FontSearchForm() {
                       </div>)}
                   </div>
                 )
-              : (graphData?._tag === "BubbleFontResult" ||
-              graphData?._tag === "BubbleSiteResult" ||
-              graphData?._tag === "RowFontResult" ||
-              graphData?._tag === "RowSiteResult") && (
-               <CytoscapeGraph
-                 fontdata={graphData}
-                 tagCallback={tagCallback}
-                 catCallback={catCallback}
-                 filter={bubbleSort}
-                 setter={handleGraphSelect}
-               />
+                : viewMode && (
+                  <CytoscapeGraph
+                    fontdata={graphData}
+                    tagCallback={tagCallback}
+                    catCallback={catCallback}
+                    filter={bubbleSort}
+                    setter={handleGraphSelect}
+                    onBack={() => submitBubble(lastTag ?? undefined)}
+                  />
+                
              )
             }
             {!viewMode && <Pagination submit={submit} results={results} pageIn={pageIn} disabled={isFetching}/>}
