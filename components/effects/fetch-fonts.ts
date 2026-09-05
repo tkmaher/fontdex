@@ -88,6 +88,14 @@ export const useFontSearch = (params: FontFilter | null) => useQuery({
   queryFn: ({ queryKey: [, p] }) => runFetchUsers(p!),
   enabled: params !== null,
   staleTime: Duration.toMillis(Duration.minutes(1)),
-  placeholderData: keepPreviousData,
+  placeholderData: (previousData, previousQuery) => {
+    const previousParams = previousQuery?.queryKey?.[1] as FontFilter | null | undefined;
+    if (!previousParams || !params) return undefined;
+    const { page: _prevPage, ...prevRest } = previousParams;
+    const { page: _curPage, ...curRest } = params;
+    return JSON.stringify(prevRest) === JSON.stringify(curRest)
+      ? previousData
+      : undefined;
+  },
   retry: false,
 });

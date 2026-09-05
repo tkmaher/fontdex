@@ -187,10 +187,6 @@ export default function FontSearchForm() {
     ${'ordered by ' + sortVal}
   `;
 
-  useEffect(() => {
-    clearFilters();
-  }, [searchingFonts]);
-
   const handleSortSelect = (selected: SortValType) => {
     setSortVal(selected);
     switch (selected) {
@@ -243,17 +239,20 @@ export default function FontSearchForm() {
     };
   });
 
+
+
   const tagCallback = useCallback(
     (data: TagType, clearBefore: boolean) => {
       const state = formStateRef.current;
       clearBefore && clearFilters();
+      setSearchingFonts(true); // font tags always imply font-mode results
   
       const newClassification =
         data.type === "classification" ? data.label : clearBefore ? "" : state.classification;
       const newStyles =
         data.type === "style_tags" ? [data.label] : clearBefore ? [] : state.styles;
       const newSubsets =
-        data.type === "subsets" ? [data.label] : clearBefore ? [] : state.subsets; // was `styles` in the original — likely a copy-paste bug
+        data.type === "subsets" ? [data.label] : clearBefore ? [] : state.subsets;
   
       setClassification(newClassification);
       setStyles(newStyles);
@@ -277,7 +276,7 @@ export default function FontSearchForm() {
       }
       setFormError(null);
       setBubbleParams(null);
-      clearBefore && setViewMode(false);
+      // clearBefore && setViewMode(false);
       setPageIn(1);
       setRowParams(result.right);
     },
@@ -288,6 +287,7 @@ export default function FontSearchForm() {
     (cat: string, clearBefore: boolean) => {
       const state = formStateRef.current;
       clearBefore && clearFilters();
+      setSearchingFonts(false); // categories always imply site-mode results
       setCategory(cat);
   
       const result = Schema.decodeUnknownEither(SiteFilter)({
@@ -303,7 +303,7 @@ export default function FontSearchForm() {
       }
       setFormError(null);
       setBubbleParams(null);
-      clearBefore && setViewMode(false);
+      // clearBefore && setViewMode(false);
       setPageIn(1);
       setRowParams(result.right);
     },
@@ -315,6 +315,20 @@ export default function FontSearchForm() {
     []
   );
 
+  const handleSearchModeToggle = useCallback(() => {
+    const next = !searchingFonts;
+    setSearchingFonts(next);
+    clearFilters();
+    setPageIn(1);
+    setBubbleSort("classification");
+    setRowParams(INIT_ROW_FILTER);
+    setBubbleParams(next ? CLASSIFICATION_FILTER : CATEGORY_FILTER);
+    // setBubbleParams(null);
+    // setViewMode(true);
+  }, [searchingFonts, clearFilters]);
+
+  const graphData = bubbleParams ? bubbleResults : results;
+
   return (
     <>
       <div className='right-stack'>
@@ -322,7 +336,7 @@ export default function FontSearchForm() {
           <button 
             type="button" 
             className='text submit' 
-            onClick={() => setSearchingFonts(!searchingFonts)}
+            onClick={handleSearchModeToggle}
           >
             {searchingFonts ? "(browsing fonts)" : "(browsing sites)"}
           </button>
@@ -486,15 +500,18 @@ export default function FontSearchForm() {
                       </div>)}
                   </div>
                 )
-              : (bubbleResults?._tag === "BubbleFontResult" || bubbleResults?._tag === "BubbleSiteResult") && (
-                  <CytoscapeGraph
-                    fontdata={bubbleParams ? bubbleResults : results}
-                    tagCallback={tagCallback}
-                    catCallback={catCallback}
-                    filter={bubbleSort}
-                    setter={handleGraphSelect}
-                  />
-                )
+              : (graphData?._tag === "BubbleFontResult" ||
+              graphData?._tag === "BubbleSiteResult" ||
+              graphData?._tag === "RowFontResult" ||
+              graphData?._tag === "RowSiteResult") && (
+               <CytoscapeGraph
+                 fontdata={graphData}
+                 tagCallback={tagCallback}
+                 catCallback={catCallback}
+                 filter={bubbleSort}
+                 setter={handleGraphSelect}
+               />
+             )
             }
             {!viewMode && <Pagination submit={submit} results={results} pageIn={pageIn} disabled={isFetching}/>}
           </div>

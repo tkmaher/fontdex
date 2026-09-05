@@ -76,6 +76,14 @@ export const useSiteSearch = (params: SiteFilter | null) => useQuery({
   queryFn: ({ queryKey: [, p] }) => runFetchSites(p!),
   enabled: params !== null,
   staleTime: Duration.toMillis(Duration.minutes(1)),
-  placeholderData: keepPreviousData,
+  placeholderData: (previousData, previousQuery) => {
+    const previousParams = previousQuery?.queryKey?.[1] as SiteFilter | null | undefined;
+    if (!previousParams || !params) return undefined;
+    const { page: _prevPage, ...prevRest } = previousParams;
+    const { page: _curPage, ...curRest } = params;
+    return JSON.stringify(prevRest) === JSON.stringify(curRest)
+      ? previousData
+      : undefined;
+  },
   retry: false,
 });
